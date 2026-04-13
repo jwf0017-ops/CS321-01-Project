@@ -1,5 +1,5 @@
 
-
+import java.util.ArrayList;
 
 // Game class
 
@@ -10,44 +10,23 @@
 * such as its Name, Description, and Reviews
 * 
 */
-
-public Game implements Comparable<Game> {
-
-
-    /**
-    *
-    * Array List for ID's of a particular game read from the Review class
-    *
-    */
-
-    ArrayList<Review> reviewIDs = new ArrayList<Review>();
-
-    for (Review r: reviewIDs) 
-        r.getReviews();
-
+public class Game implements Comparable<Game> {
 
     @Override
-    public compareTo(Game otherGame) {
-        return otherGame.Game();
+    public int compareTo(Game otherGame) {
+        return gameName.compareTo(otherGame.getName());
     }
-
-
-/* // default constructor --> don't think we need a default constructor
-    public Game() {
-        ID = 0;
-        gameName = null;
-        gameDesc = null;
-        gameRev = null;
-    }
-
-*/
 
 // Constructor
-    public Game(int i, /*String r*/, String d, String n) {
-        ID = i;
-        //gameRev = r; --> We don't read reviews from XML
-        gameDesc = d;
-        gameName = n;
+    public Game(int inID, String inDesc, String inName, int inAge, int inMinPlayers, int inMaxPlayers, int inYear) {
+        gameID = inID;
+        gameDesc = inDesc;
+        gameName = inName;
+        minAge = inAge;
+        minPlayers = inMinPlayers;
+        maxPlayers = inMaxPlayers;
+        yearPublished = inYear;
+        reviewSetUp();
     }
 
 
@@ -56,34 +35,59 @@ public Game implements Comparable<Game> {
         return gameName;
     }
 
-    public String getReviews() {
-        return gameRev;
-    }
-
     public String getDescription() {
         return gameDesc;
     }
 
-    public void setName(String n) {
-        gameName = n;
+    public int getID() {
+        return gameID;
     }
 
-    public void setDescription(String d) {
-        gameDesc = d;
+    public int getMinAge() {
+        return minAge;
+    }
+
+    public int getMinPlayers() {
+        return minPlayers;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+//    public ArrayList<String> getCategories() {
+//        return (ArrayList<String>) categories.clone();
+//    }
+
+    public int getYearPublished() {
+        return yearPublished;
     }
 
     public void addReview(int r) {
-        
+        reviewIDs.add(r);
+    }
+
+    /**
+     * This method will be called by the constructor to bring the game's reviews into the arraylist
+     */
+    public void reviewSetUp() {
+        // The intention is for this method to access the file where we do keep the list of review IDs
     }
 
 
 
   // Variable declared
 
-  private String gameName; // The game name tied to the game
-  private String gameDesc; // The game description tied to the game
-  private String gameRev; // All reviews of the game 
-  private int ID; // ID of the game
+  private final String gameName; // The game name tied to the game
+  private final String gameDesc; // The game description tied to the game
+  private final int gameID; // ID of the game
+  private ArrayList<Integer> reviewIDs = new ArrayList<Integer>();
+  private final int minAge;
+  private final int minPlayers;
+  private final int maxPlayers;
+  private final int yearPublished;
+  //private ArrayList<String> categories = new ArrayList<String>();
+    // private ArrayList<Review> reviewList; // IDK if we're gonna use this so I'm leaving it commented out for now.
   
   // Declared variables end
 
