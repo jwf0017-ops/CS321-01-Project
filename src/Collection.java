@@ -34,8 +34,14 @@ public class Collection
 
     public void sort(String sortPar)
     {
-//        // This is going to be a lot more complicated when we build up the Game class and its various sort classes
-//        Collections.sort(gameList);
+        Collections.sort(gameList);
+    }
+
+    public void changeActive() {
+        if (isActive == false) {
+            isActive = true;
+            // this is where we use xml parser to get game into this collection
+        }
     }
 
     public void filter()
@@ -57,22 +63,38 @@ public class Collection
 
     private boolean gameExists(int inID)
     {
-//        boolean exists = false;
-//        for (Game game : gameList)
-//        {
-//            if (game.getGameID() == inID)
-//            {
-//                exists = true;
-//                break;
-//            }
-//        }
-//
-//        return exists;
-        return true;
+        boolean exists = false;
+        for (Game game : gameList)
+        {
+            if (game.getID() == inID)
+            {
+                exists = true;
+                break;
+            }
+        }
+
+        return exists;
     }
 
-    ArrayList<Integer> gameIDList;
- //   ArrayList<Game> gameList;
-    String name;
-    int ID;
+    public String getName() {
+        return name;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public boolean getActive() {
+        return isActive;
+    }
+
+    public ArrayList<Integer> getIDList() {
+        return (ArrayList<Integer>) gameIDList.clone();
+    }
+
+    private boolean isActive = false;
+    private ArrayList<Integer> gameIDList;
+    private ArrayList<Game> gameList;
+    private String name;
+    private int ID;
 }
