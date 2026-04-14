@@ -6,7 +6,7 @@ public class MainViewFrame extends JFrame {
 
     public MainViewFrame() {
         setTitle("Game App");
-        setSize(1500, 900); // default sizes are 600, 400
+        setSize(1500, 900); // default sizes are 600, 400; 1500, 900 are the height and width of my laptop
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         add(new Login_View()); // start with login
