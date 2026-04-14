@@ -1,10 +1,6 @@
 
 
 public class UserClass{
-    String name;
-    int ID;
-    String[] collactionsList;
-    String[] reviewList;
 
     public user(String name, int ID){
         this.name = name;
