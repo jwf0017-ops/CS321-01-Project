@@ -1,8 +1,8 @@
 
 
-public class UserClass{
+public class User{
 
-    public user(String name, int ID){
+    public User(String name, int ID){
         this.name = name;
         this.ID = ID;
         this.collactionsList = new String[];
