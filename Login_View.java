@@ -3,11 +3,16 @@ import java.awt.*;
 
 public class Login_View extends JPanel {
 
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private JButton loginButton;
+    // declare private variables section
+    private JTextField usernameField; // text box for user input
+    private JPasswordField passwordField; // text box for user password
+    private JButton loginButton; // 
     private JButton createAccountButton;
+    // end private variables section
 
+    
+
+    // Constructor
     public Login_View() {
         setLayout(new GridLayout(3, 2));
 
@@ -26,6 +31,7 @@ public class Login_View extends JPanel {
         add(createAccountButton);
     }
 
+    // Getters
     public String getUsername() {
         return usernameField.getText();
     }
