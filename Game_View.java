@@ -14,7 +14,7 @@ public class Game_View extends JPanel {
         add(nameLabel, BorderLayout.NORTH);
 
         descriptionArea = new JTextArea();
-        descriptionArea.setEditable(false);
+        descriptionArea.setEditable(false); // non editable game description
         add(new JScrollPane(descriptionArea), BorderLayout.CENTER);
 
         reviewList = new JList<>();
@@ -27,6 +27,6 @@ public class Game_View extends JPanel {
     }
 
     public void setReviews(String[] reviews) {
-        reviewList.setListData(reviews);
+        reviewList.setListData(reviews); // pull game reviews
     }
 }
