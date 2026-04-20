@@ -2,7 +2,7 @@
 
 public class User{
 
-    public User(String name, int ID){
+    /*public User(String name, int ID){
         this.name = name;
         this.ID = ID;
         this.collactionsList = new String[];
@@ -108,4 +108,9 @@ public class User{
     public String GetReview(){
         return "review function not finished";
     }
+
+    private String name;
+    private int ID;
+    private String collactionsList;
+    private String reviewList;*/
 }

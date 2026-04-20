@@ -43,10 +43,10 @@ public class collectionParser {
      * Retrieves the entire collection list from the XML object
      * @return an array list of collection objects, in the order they were found in the file
      */
-    public ArrayList<collection> retrievecollectionList() {
+    public ArrayList<Collection> retrievecollectionList() {
         // do the work to build this list only if needed
         if (currentcollectionList == null) {
-            currentcollectionList = new ArrayList<collection>();
+            currentcollectionList = new ArrayList<Collection>();
 
             // retrieve the top level node in the tree, items
             Element items =  xmlDocumentTree.getDocumentElement();
@@ -114,7 +114,7 @@ public class collectionParser {
      * @param xmlcollectionNode The collection node from the DOM tree
      * @return a collection object containing the parsed attributes
      */
-    private collection parseNextcollection(Node xmlcollectionNode) {
+    private Collection parseNextcollection(Node xmlcollectionNode) {
         Integer bgg_id;
         //String thumburi ="tbd";
         String title="tbd";
@@ -137,7 +137,7 @@ public class collectionParser {
 
 
 
-        return new collection(title, bgg_id); //Add in array parsing for reviews and collections
+        return new Collection(bgg_id, title, collectionsList); //Add in array parsing for reviews and collections
     }
 
     /**
