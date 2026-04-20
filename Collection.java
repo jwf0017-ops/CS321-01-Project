@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -14,6 +15,17 @@ public class Collection
         ID = inID;
         name = inName;
         gameIDList = inList;
+        try {
+            gameParser dom = new gameParser("C:/Users/lordb/Downloads/bgg3Games.xml");
+            makeList(inList, dom);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void makeList(ArrayList<Integer> inList, gameParser inParse) {
+        gameList = inParse.retrieveGameList();
+        gameList.removeIf(game -> (!inList.contains(game.getID())));
     }
 
     public boolean addGame(int inID)
@@ -28,38 +40,58 @@ public class Collection
 
     public void deleteGame(int inID)
     {
-//        gameList.remove(inID);
-        // If we do the active high deal, we'll need to check for that and refresh panel if open
+        gameIDList.remove(inID);
+        gameList.removeIf(game -> (game.getID() == inID));
     }
 
-    public void sort(String sortPar)
+    /**
+     * 0 = sort by ID (I assume this won't be used)
+     * 1 = sort by name
+     * 2 = sort by year published
+     * 3 = sort by minimum age
+     * 4 = sort by minimum players
+     * 5 = sort by maximum players
+     * @param sortPar This can take several values based on what we're sorting by
+     */
+    public void sort(int sortPar)
     {
-        Collections.sort(gameList);
-    }
+        switch (sortPar) {
+            case 0: {
+                compID comp = new compID();
+                Collections.sort(gameList, comp);
+            }
 
-    public void changeActive() {
-        if (isActive == false) {
-            isActive = true;
-            // this is where we use xml parser to get game into this collection
+            case 1: {
+                Collections.sort(gameList);
+            }
+
+            case 2: {
+                compYear comp = new compYear();
+                Collections.sort(gameList, comp);
+            }
+
+            case 3: {
+                compMinAge comp = new compMinAge();
+                Collections.sort(gameList, comp);
+            }
+
+            case 4: {
+                compMinPlayers comp = new compMinPlayers();
+                Collections.sort(gameList, comp);
+            }
+
+            case 5: {
+                compMaxPlayers comp = new compMaxPlayers();
+                Collections.sort(gameList, comp);
+            }
+
         }
     }
 
-    public void filter()
-    {
-//        // I'm not sure how we'd pass the filter options into this method
-//        // Maybe we have a "filter" class that is just all the mutators/accessors for the filter options
-//        // And then use that to work on filtering our list
-//        // I guess we'd have user buttons affect filter class which affects this filter method
+//    public ArrayList<Game> filter(int filterParam, )
+//    {
 //
-//        // If we do the active to high thing, we can just use the already available gameList
-//        // And don't have to build a new one here before we start
-//        ArrayList<Game> filteredList;
-//
-//        for (Game game : gameList)
-//        {
-//
-//        }
-    }
+//    }
 
     private boolean gameExists(int inID)
     {
