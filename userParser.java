@@ -137,7 +137,7 @@ public class userParser {
 
 
 
-        return new User(title, bgg_id); //Add in array parsing for reviews and collections
+        return new User(title, bgg_id, retrieveCollectionList(), retrieveReviewList()); //Add in array parsing for reviews and collections
     }
 
     /**

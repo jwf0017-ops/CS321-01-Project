@@ -33,8 +33,7 @@ public class collectionParser {
         }
 
         currentcollectionList = null;   // start with unallocated list
-        reviewList = null;
-        collectionsList = null;
+        gameList = null;
         // at this point, if there were no exceptions, the member variable
         // xmlDocumentTree contains all of the nodes found in the XML file.
     }
@@ -62,51 +61,32 @@ public class collectionParser {
     }
 
 
-    public ArrayList<Integer> retrieveReviewList()
+    public ArrayList<Integer> retrieveGameList()
     {
         String fieldText;
-        if (reviewList == null) {
-            reviewList = new ArrayList<Integer>();
+        if (gameList == null) {
+            gameList = new ArrayList<Integer>();
 
             // retrieve the top level node in the tree, items
             Element items =  xmlDocumentTree.getDocumentElement();
-            NodeList xmlcollectionList = items.getElementsByTagName("review");
+            NodeList xmlcollectionList = items.getElementsByTagName("game");
 
             for (int collectionNumber = 0; collectionNumber < xmlcollectionList.getLength(); collectionNumber++) {
                 Node Review = xmlcollectionList.item(collectionNumber);
                 NamedNodeMap attributes = Review.getAttributes();
 
 
-                reviewList.add(Integer.parseInt(attributes.getNamedItem("value").getNodeValue()));
+                gameList.add(Integer.parseInt(attributes.getNamedItem("value").getNodeValue()));
 
 
                 //currentcollectionList.add(parseNextcollection(collection));
             }
         }
 
-        return reviewList;
+        return gameList;
     }
 
-    public ArrayList<Integer> retrieveCollectionList()
-    {
-        if (collectionsList == null) {
-            collectionsList = new ArrayList<Integer>();
 
-            // retrieve the top level node in the tree, items
-            Element items =  xmlDocumentTree.getDocumentElement();
-            NodeList xmlcollectionList = items.getElementsByTagName("collection");
-
-            for (int collectionNumber = 0; collectionNumber < xmlcollectionList.getLength(); collectionNumber++) {
-                Node Collection = xmlcollectionList.item(collectionNumber);
-                NamedNodeMap attributes = Collection.getAttributes();
-
-
-                collectionsList.add(Integer.parseInt(attributes.getNamedItem("value").getNodeValue()));
-            }
-        }
-
-        return collectionsList;
-    }
 
     /**
      * Each child node of the main root node is an "item" node in the file. (Tagged with <item )
@@ -129,15 +109,12 @@ public class collectionParser {
 
 
         title = parseTextField(xmlcollectionNode,"name");
-        //thumburi = parseTextField(xmlcollectionNode, "thumbnail");
-        //year = parseIntegerField(xmlcollectionNode, "yearpublished");
-        //desc = parseTextField(xmlcollectionNode, "description");
-        //minAge = parseIntegerField(xmlcollectionNode, "minAge");
 
 
 
 
-        return new Collection(bgg_id, title, collectionsList); //Add in array parsing for reviews and collections
+
+        return new Collection(bgg_id, title, retrieveGameList()); //Add in array parsing for reviews and collections
     }
 
     /**
@@ -193,6 +170,6 @@ public class collectionParser {
 
     private Document xmlDocumentTree;
     private ArrayList<Collection> currentcollectionList;
-    private ArrayList<Integer> collectionsList; //List of Collection IDs
-    private ArrayList<Integer> reviewList; //List of Review IDs
+
+    private ArrayList<Integer> gameList; //List of Game IDs
 }

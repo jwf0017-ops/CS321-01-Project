@@ -1,116 +1,84 @@
-
+import java.util.ArrayList;
 
 public class User{
 
-    /*public User(String name, int ID){
+    public User(String name, int ID, ArrayList<Integer> collectoins, ArrayList<Integer> reviws){
         this.name = name;
         this.ID = ID;
-        this.collactionsList = new String[];
-        this.reviewList = new String[];
+        this.collactionsList = collectoins;
+        this.reviewList = reviws;
     }
 
     public String GetName(){
         return this.name;
     }
-    public String GetID(){
+    public int GetID(){
         return this.ID;
     }
-    public String GetCollection(int id){
-        //get the collection using the id will have to be drawn out further
-        //put into tmp array
-        String[] temparray;
-        String tempvalue;
-        int i  = 0;
+    public int GetCollection(int tarID){
 
-        temparray = this.collactionsList;
-
-        if(id < 0 || id >= temparray.length){
-            return "Invalid collection id";
-        }
-
-        tempvalue = temparray[id];
-
-        if(temparray[0] == null){
-            System.out.println("No items in collection list");
-            String text = "No collections";
-            return text;
-        }
-
-        while(i < temparray.length){
-            if(i == id){
-                if(tempvalue == null){
-                    String text = "No collection at that id";
-                    return text;
-                }
-                return tempvalue;
+        for(int x=0; x<collactionsList.size(); x++)
+        {
+            if(collactionsList.get(x)==tarID)
+            {
+                return x;
             }
-            i += 1;
         }
 
-        return "all collections added";
+        return 0;
     }
 
-    public String AddCollection(String collection)
+    public void AddCollection(int tarID)
     {
-        int length;
-        int i = 0;
-
-        while(i < this.collactionsList.length && this.collactionsList[i] != null){
-            i += 1;
-        }
-
-        length = i;
-
-        if(length >= this.collactionsList.length){
-            String text = "collection list full";
-            return text;
-        }
-
-        this.collactionsList[length] = collection;
-        String text = "collection sucessfuly added";
-        return text;
+        collactionsList.add(tarID);
     }
 
-    public String DeleteCollection(int id)//each collection gets a id
-    {//get the collection using collection id
-        //using temp to hold the collection
-        String[] temparray;
-        String tempvalue;
-        int i = 0;
-
-        temparray = this.collactionsList;
-
-        if(id < 0 || id >= temparray.length){
-            return "Invalid collection id";
-        }
-
-        tempvalue = temparray[id];
-
-        if(tempvalue == null){
-            String text = "collection not found";
-            return text;
-        }
-
-        while(i < this.collactionsList.length){
-            if(i == id){
-                this.collactionsList[i] = null;
-                String text = "collection deleted";
-                return text;
+    public void DeleteCollection(int tarID)//each collection gets a id
+    {
+        for(int x=0; x<collactionsList.size(); x++)
+        {
+            if(collactionsList.get(x)==tarID)
+            {
+                collactionsList.remove(x);
+                return;
             }
-            i += 1;
         }
-
-        String text = "collection not found";
-        return text;
     }
 
     //if i dont brin gin the review then i cannot add or delete it
-    public String GetReview(){
-        return "review function not finished";
+    public int GetReview(int tarID){
+
+        for(int x=0; x<reviewList.size(); x++)
+        {
+            if(reviewList.get(x)==tarID)
+            {
+                return x;
+            }
+        }
+
+        return 0;
     }
+
+    public void addReview(int tarID)
+    {
+        reviewList.add(tarID);
+    }
+
+    public void deleteReview(int tarID)
+    {
+        for(int x=0; x<reviewList.size(); x++)
+        {
+            if(reviewList.get(x)==tarID)
+            {
+                reviewList.remove(x);
+                return;
+            }
+        }
+    }
+
 
     private String name;
     private int ID;
-    private String collactionsList;
-    private String reviewList;*/
+    private ArrayList<Integer> collactionsList;
+    private ArrayList<Integer> reviewList;
 }
