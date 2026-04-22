@@ -3,32 +3,52 @@ import java.awt.*;
 
 public class Login_View extends JPanel {
 
-    // declare private variables section
-    private JTextField usernameField; // text box for user input
-    private JPasswordField passwordField; // text box for user password
-    private JButton loginButton; // 
+    private MainViewFrame frame;
+
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+    private JButton loginButton;
     private JButton createAccountButton;
-    // end private variables section
 
-    
+    public Login_View(MainViewFrame frame) {
+        this.frame = frame;
 
-    // Constructor
-    public Login_View() {
-        setLayout(new GridLayout(3, 2));
+        setLayout(new GridLayout(4, 2, 10, 10));
+        // Username
 
         add(new JLabel("Username:"));
         usernameField = new JTextField();
         add(usernameField);
 
+        // Password
         add(new JLabel("Password:"));
         passwordField = new JPasswordField();
         add(passwordField);
 
+        // Buttons
         loginButton = new JButton("Login");
         createAccountButton = new JButton("Create Account");
 
         add(loginButton);
         add(createAccountButton);
+
+        // Login action -> go to home page
+        loginButton.addActionListener(e -> {
+            String username = getUsername();
+            String password = getPassword();
+
+            // Optional validation logic but ensures the user to input both username and password
+            if (!username.isEmpty() && !password.isEmpty()) {
+                frame.showView("HOME");
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter username and password");
+            }
+        });
+
+        // Create account(shows only this message right now!) -> **This needs to be implemented**
+        createAccountButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Create Account not implemented yet.");
+        });
     }
 
     // Getters
