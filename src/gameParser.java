@@ -102,7 +102,7 @@ public class gameParser {
             if (field.getNodeName().equals(fieldname)) {
                 NamedNodeMap attributes = field.getAttributes();
                 Node wowzers = attributes.getNamedItem("value");
-                if (wowzers != null)
+                if (wowzers != null && attributes.getNamedItem("type").getNodeValue().compareTo("alternate") != 0)
                 {
                     fieldText = wowzers.getNodeValue();
                 }

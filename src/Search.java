@@ -1,16 +1,18 @@
 import java.io.IOException;
 import java.util.ArrayList;
 
-//using this class to hold the filters, genres that we will need in the software
-//then also a fildGame using a string input and Collection ResultsList
-//not alot of details so going to pick the filter i think we will need and Genre filters
-//fild game is pretty stright fowrard and collectio n Results not alot of detail so soing to try
-//and figure that out
+
 public class Search {
 
-    public Search(gameParser theParseler) // DO NOT TELL ME MY FUNNY NAME IS A TYPO
+    public Search()
     {
-            gamesList = theParseler.retrieveGameList();
+        try {
+            gameParser dom = new gameParser("src/bgg90Games.xml"); // This is where the file is located on my system
+            gamesList = dom.retrieveGameList();
+        } catch (
+                IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -31,14 +33,6 @@ public class Search {
     public ArrayList<Game> maxPlayerFilter(int players) {
 
         ArrayList<Game> maxPlayersList = new ArrayList<Game>();
-        ArrayList<Game> gamesList;
-        try {
-            gameParser dom = new gameParser("C:/Users/lordb/Downloads/bgg3Games.xml"); // This is where the file is located on my system
-            gamesList = dom.retrieveGameList();
-        } catch (
-                IOException e) {
-            throw new RuntimeException(e);
-        }
 
         for (Game kindaGame : gamesList) {
             if (players == kindaGame.getMaxPlayers()) {
@@ -53,17 +47,9 @@ public class Search {
     public ArrayList<Game> nameFilter(String gameName) {
 
         ArrayList<Game> nameList = new ArrayList<Game>();
-        ArrayList<Game> gamesList;
-        try {
-            gameParser dom = new gameParser("C:/Users/lordb/Downloads/bgg3Games.xml"); // This is where the file is located on my system
-            gamesList = dom.retrieveGameList();
-        } catch (
-                IOException e) {
-            throw new RuntimeException(e);
-        }
 
         for (Game kindaGame : gamesList) {
-            if (gameName.equals(kindaGame.getName())) {
+            if (kindaGame.getName() != null && kindaGame.getName().contains(gameName)) {
                 nameList.add(kindaGame);
             }
         }

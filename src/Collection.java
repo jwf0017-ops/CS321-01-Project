@@ -16,7 +16,7 @@ public class Collection
         name = inName;
         gameIDList = inList;
         try {
-            gameParser dom = new gameParser("C:/Users/lordb/Downloads/bgg3Games.xml");
+            gameParser dom = new gameParser("src/bgg90Games.xml");
             makeList(inList, dom);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -53,39 +53,42 @@ public class Collection
      * 5 = sort by maximum players
      * @param sortPar This can take several values based on what we're sorting by
      */
-    public void sort(int sortPar)
+    public ArrayList<Game> sort(int sortPar)
     {
+        ArrayList<Game> fakeList = new ArrayList<Game>();
+        fakeList.addAll(gameList);
         switch (sortPar) {
             case 0: {
                 compID comp = new compID();
-                Collections.sort(gameList, comp);
+                Collections.sort(fakeList, comp);
             }
 
             case 1: {
-                Collections.sort(gameList);
+                Collections.sort(fakeList);
             }
 
             case 2: {
                 compYear comp = new compYear();
-                Collections.sort(gameList, comp);
+                Collections.sort(fakeList, comp);
             }
 
             case 3: {
                 compMinAge comp = new compMinAge();
-                Collections.sort(gameList, comp);
+                Collections.sort(fakeList, comp);
             }
 
             case 4: {
                 compMinPlayers comp = new compMinPlayers();
-                Collections.sort(gameList, comp);
+                Collections.sort(fakeList, comp);
             }
 
             case 5: {
                 compMaxPlayers comp = new compMaxPlayers();
-                Collections.sort(gameList, comp);
+                Collections.sort(fakeList, comp);
             }
 
         }
+        return fakeList;
     }
 
 //    public ArrayList<Game> filter(int filterParam, )

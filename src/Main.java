@@ -8,7 +8,7 @@ void main() {
 
     ArrayList<Game> gamesList;
     try {
-        gameParser dom = new gameParser("C:/Users/lordb/Downloads/bgg3Games.xml");
+        gameParser dom = new gameParser("src/bgg90Games.xml");
         gamesList = dom.retrieveGameList();
     } catch (IOException e) {
         throw new RuntimeException(e);
