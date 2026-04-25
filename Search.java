@@ -1,5 +1,6 @@
 import java.util.ArrayList;
-
+import java.util.Arrays;
+/*
 //using this class to hold the filters, genres that we will need in the software
 //then also a fildGame using a string input and Collection ResultsList
 //not alot of details so going to pick the filter i think we will need and Genre filters
@@ -20,7 +21,7 @@ public int players_filter(players){
     //print check fo the array
 
     //using 100 as a place holder
-    length = games.length
+    length = games.length;
             System.out.print(length);
     int[] gamesMatchSize;
     int i = 0;
@@ -28,7 +29,7 @@ public int players_filter(players){
     //then going to use each game id to get the player. again assuming longest way might be simipiler then this
     while(i < length) {
         //using the get player function to get the players for each game id
-        int[] playerNumber = new int[100]
+        int[] playerNumber = new int[100];
         //the 100 is a place holder
         playerNumber[i] = gamesarray[i]; //gamearray will go into a function to get the miniunm number of players
         if (playerNumber == players) {
@@ -127,4 +128,4 @@ public class Genres(genres){
     }
 
 }
-}
+*/
