@@ -1,0 +1,11 @@
+<users>
+    <user id="1">
+        <name value="The One"/>
+        <pass value="Nosecurity"/>
+        <collection value="1"/>
+        <collection value="2"/>
+        <collection value="3"/>
+        <review value="8"/>
+        <review value="18"/>
+    </user>
+</users>
