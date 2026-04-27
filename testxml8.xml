@@ -1,0 +1,24 @@
+<users>
+    <user id="200">
+        <name value="Toby"></name>
+        <reviews>
+            <review value="10"></review>
+            <review value="20"></review>
+        </reviews>
+        <collections>
+            <collection value="5"></collection>
+            <collection value="6"></collection>
+        </collections>
+    </user>
+    <user id="400">
+        <name value="Boby"></name>
+        <reviews>
+            <review value="11"></review>
+            <review value="22"></review>
+        </reviews>
+        <collections>
+            <collection value="6"></collection>
+            <collection value="7"></collection>
+        </collections>
+    </user>
+</users>

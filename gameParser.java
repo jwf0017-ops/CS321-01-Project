@@ -59,14 +59,14 @@ public class gameParser {
         return currentGameList;
     }
 
-    public ArrayList<Integer> retrieveReviewList()
+    public ArrayList<Integer> retrieveReviewList(Node gameNode)
     {
         String fieldText;
-        if (reviewList == null) {
+
             reviewList = new ArrayList<Integer>();
 
             // retrieve the top level node in the tree, items
-            Element items =  xmlDocumentTree.getDocumentElement();
+            Element items =  (Element) gameNode;
             NodeList xmlcollectionList = items.getElementsByTagName("review");
 
             for (int collectionNumber = 0; collectionNumber < xmlcollectionList.getLength(); collectionNumber++) {
@@ -79,7 +79,7 @@ public class gameParser {
 
                 //currentcollectionList.add(parseNextcollection(collection));
             }
-        }
+
 
         return reviewList;
     }
@@ -115,7 +115,7 @@ public class gameParser {
 
 
 
-        return new Game(bgg_id,desc, title, minAge, minPlayers, maxPlayers, year, retrieveReviewList());
+        return new Game(bgg_id,desc, title, minAge, minPlayers, maxPlayers, year, retrieveReviewList(xmlGameNode));
     }
 
     /**

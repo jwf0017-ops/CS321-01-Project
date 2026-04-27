@@ -7,8 +7,6 @@
         <minage value="12"/>
         <reviews>
             <review value="10"/>
-            <review value="10"/>
-            <review value="10"/>
         </reviews>
     </item>
     <item id="381626">
@@ -18,8 +16,6 @@
         <minage value="10"/>
         <reviews>
             <review value="10"/>
-            <review value="10"/>
-            <review value="10"/>
         </reviews>
     </item>
     <item id="381247">
@@ -28,8 +24,6 @@
         <yearpublished value="2024"/>
         <minage value="12"/>
         <reviews>
-            <review value="10"/>
-            <review value="10"/>
             <review value="10"/>
         </reviews>
     </item>

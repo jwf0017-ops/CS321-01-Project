@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<reviews>
+    <review id="1">
+        <gID value="1"/>
+        <uID value="1"/>
+        <yearpublished value="oooooo"/>
+        <rating value="5"/>
+    </review>
+    <review id="2">
+        <gID value="3"/>
+        <uID value="4"/>
+        <yearpublished value="ooooao"/>
+        <rating value="4"/>
+    </review>
+</reviews>

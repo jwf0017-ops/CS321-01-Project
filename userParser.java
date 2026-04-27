@@ -2,8 +2,16 @@ import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -62,14 +70,13 @@ public class userParser {
     }
 
 
-    public ArrayList<Integer> retrieveReviewList()
+    public ArrayList<Integer> retrieveReviewList(Node userNode)
     {
         String fieldText;
-        if (reviewList == null) {
-            reviewList = new ArrayList<Integer>();
 
+        reviewList = new ArrayList<Integer>();
             // retrieve the top level node in the tree, items
-            Element items =  xmlDocumentTree.getDocumentElement();
+            Element items =  (Element) userNode;
             NodeList xmlUserList = items.getElementsByTagName("review");
 
             for (int UserNumber = 0; UserNumber < xmlUserList.getLength(); UserNumber++) {
@@ -82,18 +89,17 @@ public class userParser {
 
                 //currentUserList.add(parseNextUser(User));
             }
-        }
+
 
         return reviewList;
     }
 
-    public ArrayList<Integer> retrieveCollectionList()
+    public ArrayList<Integer> retrieveCollectionList(Node userNode)
     {
-        if (collectionsList == null) {
-            collectionsList = new ArrayList<Integer>();
 
+        collectionsList = new ArrayList<Integer>();
             // retrieve the top level node in the tree, items
-            Element items =  xmlDocumentTree.getDocumentElement();
+            Element items =  (Element) userNode;
             NodeList xmlUserList = items.getElementsByTagName("collection");
 
             for (int UserNumber = 0; UserNumber < xmlUserList.getLength(); UserNumber++) {
@@ -103,7 +109,7 @@ public class userParser {
 
                 collectionsList.add(Integer.parseInt(attributes.getNamedItem("value").getNodeValue()));
             }
-        }
+
 
         return collectionsList;
     }
@@ -137,7 +143,7 @@ public class userParser {
 
 
 
-        return new User(title, bgg_id, retrieveCollectionList(), retrieveReviewList()); //Add in array parsing for reviews and collections
+        return new User(title, bgg_id, retrieveCollectionList(xmlUserNode), retrieveReviewList(xmlUserNode)); //Add in array parsing for reviews and collections
     }
 
     /**
@@ -190,6 +196,87 @@ public class userParser {
         }
         return fieldValue;
     }
+
+    public void saveUsersList(ArrayList<User> UsersList, String outputFileName) throws FileNotFoundException, ParserConfigurationException, TransformerException {
+        File outputFileTest = new File(outputFileName);
+        if (!outputFileTest.exists()) {
+            throw new FileNotFoundException(outputFileName+" not found.");
+        }
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.newDocument();
+
+        Element rootElement = doc.createElement("users");
+        doc.appendChild(rootElement);
+
+        for(int x=0; x<UsersList.size(); x++)
+        {
+            Element User = doc.createElement("user");
+            rootElement.appendChild(User);
+            Attr gid = doc.createAttribute("id");
+            gid.setValue(String.valueOf(UsersList.get(x).GetID()));
+            User.setAttributeNode(gid);
+
+            Element name = doc.createElement("name");
+            User.appendChild(name);
+            Attr nameStr = doc.createAttribute("value");
+            nameStr.setValue(UsersList.get(x).GetName());
+            name.setAttributeNode(nameStr);
+
+
+
+            Element reviewElement = doc.createElement("reviews");
+            User.appendChild(reviewElement);
+
+
+
+            ArrayList<Integer> reviews = UsersList.get(x).getReviewList();
+            for(int y=0; y<reviews.size(); y++)
+            {
+                Element review = doc.createElement("review");
+                reviewElement.appendChild(review);
+                Attr rid = doc.createAttribute("value");
+                rid.setValue(String.valueOf(reviews.get(y)));
+                review.setAttributeNode(rid);
+
+            }
+
+            Element collectionElement = doc.createElement("collections");
+            User.appendChild(collectionElement);
+
+            ArrayList<Integer> collections = UsersList.get(x).getCollactionsList();
+            for(int y=0; y<reviews.size(); y++)
+            {
+                Element review = doc.createElement("collection");
+                reviewElement.appendChild(review);
+                Attr rid = doc.createAttribute("value");
+                rid.setValue(String.valueOf(reviews.get(y)));
+                review.setAttributeNode(rid);
+
+            }
+
+
+
+
+        }
+
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4"); // Set indentation size
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+
+        DOMSource source = new DOMSource(doc);
+        FileOutputStream output = new FileOutputStream(outputFileTest);
+        StreamResult result = new StreamResult(output);
+        transformer.transform(source, result);
+
+
+
+    }
+
 
     private Document xmlDocumentTree;
     private ArrayList<User> currentUserList;

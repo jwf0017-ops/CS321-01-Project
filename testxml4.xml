@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<collections>
+    <collection id="1">
+        <name value="yahoo"/>
+        <games>
+            <game value="1"/>
+            <game value="2"/>
+        </games>
+    </collection>
+    <collection id="2">
+        <name value="yipee"/>
+        <games>
+            <game value="3"/>
+            <game value="4"/>
+        </games>
+    </collection>
+</collections>

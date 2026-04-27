@@ -69,14 +69,15 @@ public class collectionParser {
     }
 
 
-    public ArrayList<Integer> retrieveGameList()
+    public ArrayList<Integer> retrieveGameList(Node collectionNode)
     {
         String fieldText;
-        if (gameList == null) {
+
             gameList = new ArrayList<Integer>();
 
+
             // retrieve the top level node in the tree, items
-            Element items =  xmlDocumentTree.getDocumentElement();
+            Element items = (Element) collectionNode;
             NodeList xmlcollectionList = items.getElementsByTagName("game");
 
             for (int collectionNumber = 0; collectionNumber < xmlcollectionList.getLength(); collectionNumber++) {
@@ -89,7 +90,7 @@ public class collectionParser {
 
                 //currentcollectionList.add(parseNextcollection(collection));
             }
-        }
+
 
         return gameList;
     }
@@ -122,7 +123,7 @@ public class collectionParser {
 
 
 
-        return new Collection(bgg_id, title, retrieveGameList()); //Add in array parsing for reviews and collections
+        return new Collection(bgg_id, title, retrieveGameList(xmlcollectionNode)); //Add in array parsing for reviews and collections
     }
 
     /**
@@ -202,34 +203,18 @@ public class collectionParser {
             nameStr.setValue(collectionsList.get(x).getName());
             name.setAttributeNode(nameStr);
 
-            Element desc = doc.createElement("description");
-            game.appendChild(desc);
-            desc.appendChild(doc.createTextNode(collectionsList.get(x).getDescription()));
-
-            Element year = doc.createElement("yearpublished");
-            game.appendChild(year);
-            Attr yearStr = doc.createAttribute("value");
-            yearStr.setValue(String.valueOf(collectionsList.get(x).getYearPublished()));
-            year.setAttributeNode(yearStr);
-
-            Element age = doc.createElement("minage");
-            game.appendChild(age);
-            Attr minAge = doc.createAttribute("value");
-            minAge.setValue(String.valueOf(collectionsList.get(x).getMinAge()));
-            age.setAttributeNode(minAge);
-
-            Element reviewElement = doc.createElement("reviews");
+            Element reviewElement = doc.createElement("games");
             game.appendChild(reviewElement);
 
 
 
-            ArrayList<Integer> reviews = collectionsList.get(x).getReviewIDs();
-            for(int y=0; y<reviews.size(); y++)
+            ArrayList<Integer> games = collectionsList.get(x).getIDList();
+            for(int y=0; y<games.size(); y++)
             {
-                Element review = doc.createElement("review");
+                Element review = doc.createElement("game");
                 reviewElement.appendChild(review);
                 Attr rid = doc.createAttribute("value");
-                rid.setValue(String.valueOf(reviews.get(y)));
+                rid.setValue(String.valueOf(games.get(y)));
                 review.setAttributeNode(rid);
 
             }

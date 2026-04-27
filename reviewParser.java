@@ -2,8 +2,16 @@ import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -32,7 +40,7 @@ public class reviewParser {
             throw new java.io.IOException("Unable to parse XML document");
         }
 
-        currentreviewList = null;   // start with unallocated list
+        currentreviewsList = null;   // start with unallocated list
 
         // at this point, if there were no exceptions, the member variable
         // xmlDocumentTree contains all of the nodes found in the XML file.
@@ -42,22 +50,22 @@ public class reviewParser {
      * Retrieves the entire review list from the XML object
      * @return an array list of review objects, in the order they were found in the file
      */
-    public ArrayList<Review> retrieveReviewList() {
+    public ArrayList<Review> retrievereviewsList() {
         // do the work to build this list only if needed
-        if (currentreviewList == null) {
-            currentreviewList = new ArrayList<Review>();
+        if (currentreviewsList == null) {
+            currentreviewsList = new ArrayList<Review>();
 
             // retrieve the top level node in the tree, items
             Element items =  xmlDocumentTree.getDocumentElement();
-            NodeList xmlreviewList = items.getElementsByTagName("review");
+            NodeList xmlreviewsList = items.getElementsByTagName("review");
 
-            for (int reviewNumber = 0; reviewNumber < xmlreviewList.getLength(); reviewNumber++) {
-                Node review = xmlreviewList.item(reviewNumber);
-                currentreviewList.add(parseNextreview(review));
+            for (int reviewNumber = 0; reviewNumber < xmlreviewsList.getLength(); reviewNumber++) {
+                Node review = xmlreviewsList.item(reviewNumber);
+                currentreviewsList.add(parseNextreview(review));
             }
         }
 
-        return currentreviewList;
+        return currentreviewsList;
     }
 
 
@@ -83,9 +91,9 @@ public class reviewParser {
 
         NamedNodeMap attributes = xmlreviewNode.getAttributes();  // for this item, get its attributes
         bgg_id = Integer.parseInt(attributes.getNamedItem("id").getNodeValue());
-        gID = Integer.parseInt(attributes.getNamedItem("gID").getNodeValue());
-        uID = Integer.parseInt(attributes.getNamedItem("uID").getNodeValue());
-        rating = Integer.parseInt(attributes.getNamedItem("rating").getNodeValue());
+        gID = parseIntegerField(xmlreviewNode, "gID");
+        uID = parseIntegerField(xmlreviewNode, "uID");
+        rating = parseIntegerField(xmlreviewNode, "rating");
         desc = parseTextField(xmlreviewNode,"description");
         //thumburi = parseTextField(xmlreviewNode, "thumbnail");
         //year = parseIntegerField(xmlreviewNode, "yearpublished");
@@ -149,7 +157,76 @@ public class reviewParser {
         return fieldValue;
     }
 
+    public void savereviewsList(ArrayList<Review> reviewsList, String outputFileName) throws FileNotFoundException, ParserConfigurationException, TransformerException {
+        File outputFileTest = new File(outputFileName);
+        if (!outputFileTest.exists()) {
+            throw new FileNotFoundException(outputFileName+" not found.");
+        }
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.newDocument();
+
+        Element rootElement = doc.createElement("reviews");
+        doc.appendChild(rootElement);
+
+        for(int x=0; x<reviewsList.size(); x++)
+        {
+            Element game = doc.createElement("review");
+            rootElement.appendChild(game);
+            Attr gid = doc.createAttribute("id");
+            gid.setValue(String.valueOf(reviewsList.get(x).getID()));
+            game.setAttributeNode(gid);
+
+            Element name = doc.createElement("gID");
+            game.appendChild(name);
+            Attr gIDStr = doc.createAttribute("value");
+            gIDStr.setValue(String.valueOf(reviewsList.get(x).getGameID()));
+            name.setAttributeNode(gIDStr);
+
+            Element uID = doc.createElement("uID");
+            game.appendChild(uID);
+            Attr uIDStr = doc.createAttribute("value");
+            uIDStr.setValue(String.valueOf(reviewsList.get(x).getUserID()));
+            uID.setAttributeNode(uIDStr);
+
+            Element year = doc.createElement("yearpublished");
+            game.appendChild(year);
+            Attr yearStr = doc.createAttribute("value");
+            yearStr.setValue(String.valueOf(reviewsList.get(x).getDesc()));
+            year.setAttributeNode(yearStr);
+
+            Element rating = doc.createElement("rating");
+            game.appendChild(rating);
+            Attr ratingStr = doc.createAttribute("value");
+            ratingStr.setValue(String.valueOf(reviewsList.get(x).getRating()));
+            rating.setAttributeNode(ratingStr);
+
+
+
+
+
+
+
+        }
+
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4"); // Set indentation size
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+
+        DOMSource source = new DOMSource(doc);
+        FileOutputStream output = new FileOutputStream(outputFileTest);
+        StreamResult result = new StreamResult(output);
+        transformer.transform(source, result);
+
+
+
+    }
+
     private Document xmlDocumentTree;
-    private ArrayList<Review> currentreviewList;
+    private ArrayList<Review> currentreviewsList;
 
 }

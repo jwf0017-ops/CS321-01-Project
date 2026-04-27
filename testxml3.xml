@@ -1,0 +1,17 @@
+<collections>
+    <collection id="001">
+        <name value="yahoo"></name>
+        <games>
+            <game value="1"></game>
+            <game value="2"></game>
+        </games>
+
+    </collection>
+    <collection id="002">
+        <name value="yipee"></name>
+        <games>
+            <game value="3"></game>
+            <game value="4"></game>
+        </games>
+    </collection>
+</collections>

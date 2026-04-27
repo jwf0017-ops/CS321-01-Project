@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<users>
+    <user id="200">
+        <name value="Toby"/>
+        <reviews>
+            <review value="10"/>
+            <review value="20"/>
+            <collection value="10"/>
+            <collection value="20"/>
+        </reviews>
+        <collections/>
+    </user>
+    <user id="400">
+        <name value="Boby"/>
+        <reviews>
+            <review value="11"/>
+            <review value="22"/>
+            <collection value="11"/>
+            <collection value="22"/>
+        </reviews>
+        <collections/>
+    </user>
+</users>

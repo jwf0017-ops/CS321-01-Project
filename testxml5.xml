@@ -1,0 +1,14 @@
+<reviews>
+    <review id="001">
+        <gID value="001"></gID>
+        <uID value="001"></uID>
+        <description value="oooooo"></description>
+        <rating value="5"></rating>
+    </review>
+    <review id="002">
+        <gID value="003"></gID>
+        <uID value="004"></uID>
+        <description value="ooooao"></description>
+        <rating value="4"></rating>
+    </review>
+</reviews>

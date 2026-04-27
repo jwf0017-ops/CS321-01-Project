@@ -75,7 +75,8 @@ public class User{
             }
         }
     }
-
+    public ArrayList<Integer> getReviewList(){return reviewList;}
+    public ArrayList<Integer> getCollactionsList(){return collactionsList;}
 
     private String name;
     private int ID;
