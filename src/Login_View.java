@@ -11,10 +11,11 @@ public class Login_View extends JPanel {
     private JButton loginButton;
     private JButton createAccountButton;
     private ArrayList<User> userList;
+    userParser parser;
 
     public Login_View(MainViewFrame frame) {
         try {
-            userParser parser = new userParser("src/userDatabase.xml");
+            parser = new userParser("src/userDatabase.xml");
             userList = parser.retrieveUserList();
         } catch (Exception e) {
             userList = new ArrayList<>();
@@ -82,10 +83,18 @@ public class Login_View extends JPanel {
                         JOptionPane.showMessageDialog(this, "User with this username already exists.");
                     }
                 }
+
                 ArrayList<Integer> newCollections = new ArrayList<Integer>();
                 ArrayList<Integer> newReviews = new ArrayList<Integer>();
                 User newbie = new User(username, password, userList.size()+1, newCollections, newReviews);
                 userList.add(newbie);
+
+                try {
+                    parser.saveUsersList(userList, "src/userDatabase.xml");
+                } catch (Exception e) {
+                    System.out.println("Failed to save games: " + e.getMessage());
+                }
+
                 JOptionPane.showMessageDialog(this, "Please log in with your new account");
             }
 

@@ -2,8 +2,16 @@ import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -61,27 +69,28 @@ public class collectionParser {
     }
 
 
-    public ArrayList<Integer> retrieveGameList()
+    public ArrayList<Integer> retrieveGameList(Node collectionNode)
     {
         String fieldText;
-        if (gameList == null) {
-            gameList = new ArrayList<Integer>();
 
-            // retrieve the top level node in the tree, items
-            Element items =  xmlDocumentTree.getDocumentElement();
-            NodeList xmlcollectionList = items.getElementsByTagName("game");
-
-            for (int collectionNumber = 0; collectionNumber < xmlcollectionList.getLength(); collectionNumber++) {
-                Node Review = xmlcollectionList.item(collectionNumber);
-                NamedNodeMap attributes = Review.getAttributes();
+        gameList = new ArrayList<Integer>();
 
 
-                gameList.add(Integer.parseInt(attributes.getNamedItem("value").getNodeValue()));
+        // retrieve the top level node in the tree, items
+        Element items = (Element) collectionNode;
+        NodeList xmlcollectionList = items.getElementsByTagName("game");
+
+        for (int collectionNumber = 0; collectionNumber < xmlcollectionList.getLength(); collectionNumber++) {
+            Node Review = xmlcollectionList.item(collectionNumber);
+            NamedNodeMap attributes = Review.getAttributes();
 
 
-                //currentcollectionList.add(parseNextcollection(collection));
-            }
+            gameList.add(Integer.parseInt(attributes.getNamedItem("value").getNodeValue()));
+
+
+            //currentcollectionList.add(parseNextcollection(collection));
         }
+
 
         return gameList;
     }
@@ -114,7 +123,7 @@ public class collectionParser {
 
 
 
-        return new Collection(bgg_id, title, retrieveGameList()); //Add in array parsing for reviews and collections
+        return new Collection(bgg_id, title, retrieveGameList(xmlcollectionNode)); //Add in array parsing for reviews and collections
     }
 
     /**
@@ -167,6 +176,71 @@ public class collectionParser {
         }
         return fieldValue;
     }
+
+    public void saveCollectionsList(ArrayList<Collection> collectionsList, String outputFileName) throws FileNotFoundException, ParserConfigurationException, TransformerException {
+        File outputFileTest = new File(outputFileName);
+        if (!outputFileTest.exists()) {
+            throw new FileNotFoundException(outputFileName+" not found.");
+        }
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.newDocument();
+
+        Element rootElement = doc.createElement("collections");
+        doc.appendChild(rootElement);
+
+        for(int x=0; x<collectionsList.size(); x++)
+        {
+            Element game = doc.createElement("collection");
+            rootElement.appendChild(game);
+            Attr gid = doc.createAttribute("id");
+            gid.setValue(String.valueOf(collectionsList.get(x).getID()));
+            game.setAttributeNode(gid);
+
+            Element name = doc.createElement("name");
+            game.appendChild(name);
+            Attr nameStr = doc.createAttribute("value");
+            nameStr.setValue(collectionsList.get(x).getName());
+            name.setAttributeNode(nameStr);
+
+            Element reviewElement = doc.createElement("games");
+            game.appendChild(reviewElement);
+
+
+
+            ArrayList<Integer> games = collectionsList.get(x).getIDList();
+            for(int y=0; y<games.size(); y++)
+            {
+                Element review = doc.createElement("game");
+                reviewElement.appendChild(review);
+                Attr rid = doc.createAttribute("value");
+                rid.setValue(String.valueOf(games.get(y)));
+                review.setAttributeNode(rid);
+
+            }
+
+
+
+
+        }
+
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4"); // Set indentation size
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+
+        DOMSource source = new DOMSource(doc);
+        FileOutputStream output = new FileOutputStream(outputFileTest);
+        StreamResult result = new StreamResult(output);
+        transformer.transform(source, result);
+
+
+
+    }
+
 
     private Document xmlDocumentTree;
     private ArrayList<Collection> currentcollectionList;
