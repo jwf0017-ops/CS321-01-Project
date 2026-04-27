@@ -14,16 +14,19 @@ public class Login_View extends JPanel {
         this.frame = frame;
 
         setLayout(new GridLayout(4, 2, 10, 10));
-        // Username
 
+
+        // Username
         add(new JLabel("Username:"));
         usernameField = new JTextField();
         add(usernameField);
+
 
         // Password
         add(new JLabel("Password:"));
         passwordField = new JPasswordField();
         add(passwordField);
+
 
         // Buttons
         loginButton = new JButton("Login");
@@ -37,7 +40,7 @@ public class Login_View extends JPanel {
             String username = getUsername();
             String password = getPassword();
 
-            // Optional validation logic but ensures the user to input both username and password
+            // Optional validation logic here
             if (!username.isEmpty() && !password.isEmpty()) {
                 frame.showView("HOME");
             } else {
@@ -45,7 +48,7 @@ public class Login_View extends JPanel {
             }
         });
 
-        // Create account(shows only this message right now!) -> **This needs to be implemented**
+        // Create account (placeholder)
         createAccountButton.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "Create Account not implemented yet.");
         });
