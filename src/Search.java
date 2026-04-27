@@ -16,10 +16,10 @@ public class Search {
     }
 
 
-    public ArrayList<Game> minPlayerFilter(int players) {
+    public ArrayList<Game> filterByPlayers(ArrayList<Game> gameList, int players) {
 
         ArrayList<Game> minPlayersList = new ArrayList<Game>();
-        for (Game kindaGame : gamesList) {
+        for (Game kindaGame : gameList) {
             if (players == kindaGame.getMinPlayers()) {
                 minPlayersList.add(kindaGame);
             }
@@ -44,11 +44,11 @@ public class Search {
 
     }
 
-    public ArrayList<Game> nameFilter(String gameName) {
+    public ArrayList<Game> filterByName(ArrayList<Game> gameList, String gameName) {
 
         ArrayList<Game> nameList = new ArrayList<Game>();
 
-        for (Game kindaGame : gamesList) {
+        for (Game kindaGame : gameList) {
             if (kindaGame.getName() != null && kindaGame.getName().contains(gameName)) {
                 nameList.add(kindaGame);
             }
@@ -56,6 +56,32 @@ public class Search {
 
         return nameList;
 
+    }
+
+    public ArrayList<Game> filterByAge(ArrayList<Game> gameList, int minAge) {
+        ArrayList<Game> ageList = new ArrayList<Game>();
+
+        for (Game kindaGame : gameList) {
+            if (kindaGame.getMinAge() >= minAge)
+            {
+                ageList.add(kindaGame);
+            }
+        }
+        return ageList;
+    }
+
+    public ArrayList<Game> filterByYear(ArrayList<Game> gameList, int year)
+    {
+        ArrayList<Game> yearList = new ArrayList<Game>();
+
+        for (Game kindaGame : gameList) {
+            if (kindaGame.getYearPublished() == year)
+            {
+                yearList.add(kindaGame);
+            }
+        }
+
+        return yearList;
     }
 
     // There will probably be more of these but it'll follow this general format I think

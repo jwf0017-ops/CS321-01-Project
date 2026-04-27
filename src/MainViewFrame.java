@@ -9,7 +9,7 @@ public class MainViewFrame extends JFrame {
 
     private Login_View loginView;
     private Home_View homeView;
-    //private Search_View searchView;
+    private Search_View searchView;
     private Game_View gameView;
 
     private ArrayList<Game> allGames;
@@ -37,7 +37,7 @@ public class MainViewFrame extends JFrame {
         // Add Card Layouts
         mainPanel.add(loginView, "LOGIN");
         mainPanel.add(homeView, "HOME");
-        //mainPanel.add(searchView, "SEARCH");
+//        mainPanel.add(searchView, "SEARCH");
         mainPanel.add(gameView, "GAME");
 
         add(mainPanel);
@@ -49,7 +49,7 @@ public class MainViewFrame extends JFrame {
 
         // Should push games to Home and Search Views
         homeView.setGames(allGames);
-        // searchView.setGames(allGames); // if you add this method
+        //searchView.setGames(allGames); // if you add this method
 
         showView("LOGIN");
     }

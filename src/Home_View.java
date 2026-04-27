@@ -49,7 +49,10 @@ public class Home_View extends JPanel {
 
         // Buttons
         logoutButton.addActionListener(e -> frame.showView("LOGIN"));
-        searchButton.addActionListener(e -> frame.showView("SEARCH"));
+        searchButton.addActionListener(e -> {
+            frame.showView("SEARCH");
+
+        });
 
         addToCollectionButton.addActionListener(e -> {
 

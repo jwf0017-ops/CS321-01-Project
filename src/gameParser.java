@@ -139,6 +139,10 @@ public class gameParser {
                 {
                     fieldText = wowzers.getNodeValue();
                 }
+                else if (wowzests != null && fieldname.equals("description"))
+                {
+                    fieldText = wowzests;
+                }
 
             }
         }

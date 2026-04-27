@@ -36,6 +36,10 @@ public class Game_View extends JPanel {
     public void setGameInfo(String name, String description) {
         nameLabel.setText(name);
         descriptionArea.setText(description);
+        if (description == "")
+        {
+            descriptionArea.setText("No description found.");
+        }
     }
 
     public void setReviews(String[] reviews) {
