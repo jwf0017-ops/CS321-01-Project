@@ -18,7 +18,7 @@ public class Game implements Comparable<Game> {
     }
 
 // Constructor
-    public Game(int inID, String inDesc, String inName, int inAge, int inMinPlayers, int inMaxPlayers, int inYear) {
+    public Game(int inID, String inDesc, String inName, int inAge, int inMinPlayers, int inMaxPlayers, int inYear, ArrayList<Integer> reviews) {
         gameID = inID;
         gameDesc = inDesc;
         gameName = inName;
@@ -26,7 +26,7 @@ public class Game implements Comparable<Game> {
         minPlayers = inMinPlayers;
         maxPlayers = inMaxPlayers;
         yearPublished = inYear;
-        reviewSetUp();
+        reviewIDs = reviews;
     }
 
 
@@ -72,6 +72,11 @@ public class Game implements Comparable<Game> {
      */
     public void reviewSetUp() {
         // The intention is for this method to access the file where we do keep the list of review IDs
+    }
+
+    public ArrayList<Integer> getReviewIDs()
+    {
+        return reviewIDs;
     }
 
 
