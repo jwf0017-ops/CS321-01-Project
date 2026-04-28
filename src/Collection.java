@@ -126,6 +126,7 @@ public class Collection
     }
 
     public ArrayList<Integer> getIDList() {
+
         return (ArrayList<Integer>) gameIDList.clone();
     }
 

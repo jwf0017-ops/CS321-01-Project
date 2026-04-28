@@ -44,10 +44,26 @@ public class Game_View extends JPanel {
         reviewPanel.setPreferredSize(new Dimension(300, 0));
         add(reviewPanel, BorderLayout.EAST);
 
+        JButton reviewButton = new JButton("Leave Review: ");
+        reviewPanel.add(reviewButton, BorderLayout.SOUTH);
+
         // Back Button
         backButton = new JButton("Back");
         add(backButton, BorderLayout.SOUTH);
 
+        reviewButton.addActionListener(event -> {
+            // The below 8 or so lines taken from someone on stackExchange who obviously knows more about GUIs than me (Jake)
+            JPanel fields = new JPanel(new GridLayout(2, 1));
+            JTextField field = new JTextField(10);
+            JComboBox<String> comboBox = new JComboBox<>(new String[]{"1", "2", "3", "4", "5"});
+
+            fields.add(field);
+            fields.add(comboBox);
+
+            int result = JOptionPane.showConfirmDialog(null, fields, "Rating", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            System.out.println(comboBox.getSelectedItem());
+            System.out.println(field.getText().trim());
+        });
         backButton.addActionListener(e -> frame.showView("HOME"));
     }
 
