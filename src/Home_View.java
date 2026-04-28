@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Home_View extends JPanel {
@@ -82,12 +83,37 @@ public class Home_View extends JPanel {
 
                         frame.getGameView().setGameInfo(
                                 selectedGame.getName(),
-                                selectedGame.getDescription()
+                                selectedGame.getDescription(),
+                                selectedGame.getID()
                         );
 
-                        frame.getGameView().setReviews(new String[] {
-                                "No reviews yet"
-                        });
+                        if (selectedGame.getReviewIDs().isEmpty())
+                        {
+                            ArrayList<String> newList = new ArrayList<String>();
+                            newList.add(selectedGame.getName());
+                            frame.getGameView().setReviews(newList);
+                        }
+                        else
+                        {
+                            reviewParser rParse;
+                            ArrayList<Review> rList;
+                            try {
+                                rParse = new reviewParser("src/reviewDatabase.xml");
+                                rList = rParse.retrievereviewsList();
+                            } catch (IOException error) {
+                                throw (new RuntimeException(error));
+                            }
+                            ArrayList<String> revArray = new ArrayList<String>();
+                            for (Review review : rList)
+                            {
+                                if (selectedGame.getReviewIDs().contains(review.getID()))
+                                {
+                                    revArray.add(review.getRating() + " Stars: " + review.getDesc());
+                                }
+                            }
+
+                            frame.getGameView().setReviews(revArray);
+                        }
 
                         frame.showView("GAME");
                     }

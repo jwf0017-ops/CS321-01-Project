@@ -40,7 +40,7 @@ public class Collection_View extends JPanel {
 
         try {
             theParser = new collectionParser("src/collectionsDatabase.xml");
-            freeMeFromThisGameparser = new gameParser("src/bgg90Games.xml");
+            freeMeFromThisGameparser = new gameParser("src/gameDatabase.xml");
             collectionArrayList = theParser.retrievecollectionList();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -293,23 +293,46 @@ public class Collection_View extends JPanel {
                 if (e.getClickCount() >= 2) {
 
                     ArrayList<Game> games = currentCollection.getGameList();
+
                     int index = gameList.getSelectedIndex();
 
-                    System.out.println(index);
-
                     if (index != -1 && games != null) {
-
 
                         Game selectedGame = games.get(index);
 
                         frame.getGameView().setGameInfo(
                                 selectedGame.getName(),
-                                selectedGame.getDescription()
+                                selectedGame.getDescription(),
+                                selectedGame.getID()
                         );
 
-                        frame.getGameView().setReviews(new String[] {
-                                "No reviews yet"
-                        });
+                        if (selectedGame.getReviewIDs().isEmpty())
+                        {
+                            ArrayList<String> newList = new ArrayList<String>();
+                            newList.add("No reviews yet");
+                            frame.getGameView().setReviews(newList);
+                        }
+                        else
+                        {
+                            reviewParser rParse;
+                            ArrayList<Review> rList;
+                            try {
+                                rParse = new reviewParser("src/reviewDatabase.xml");
+                                rList = rParse.retrievereviewsList();
+                            } catch (IOException error) {
+                                throw (new RuntimeException(error));
+                            }
+                            ArrayList<String> revArray = new ArrayList<String>();
+                            for (Review review : rList)
+                            {
+                                if (review.getGameID() == selectedGame.getID())
+                                {
+                                    revArray.add(review.getRating() + " Stars: " + review.getDesc());
+                                }
+                            }
+
+                            frame.getGameView().setReviews(revArray);
+                        }
 
                         frame.showView("GAME");
                     }

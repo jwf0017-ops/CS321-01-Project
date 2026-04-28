@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Search_View extends JPanel {
@@ -110,12 +111,37 @@ public class Search_View extends JPanel {
 
                     frame.getGameView().setGameInfo(
                             selectedGame.getName(),
-                            selectedGame.getDescription()
+                            selectedGame.getDescription(),
+                            selectedGame.getID()
                     );
 
-                    frame.showView("GAME");
+                    if (selectedGame.getReviewIDs().isEmpty()) {
+                        ArrayList<String> newList = new ArrayList<String>();
+                        newList.add("No reviews yet");
+                        frame.getGameView().setReviews(newList);
+                    } else {
+                        reviewParser rParse;
+                        ArrayList<Review> rList;
+                        try {
+                            rParse = new reviewParser("src/reviewDatabase.xml");
+                            rList = rParse.retrievereviewsList();
+                        } catch (IOException error) {
+                            throw (new RuntimeException(error));
+                        }
+                        ArrayList<String> revArray = new ArrayList<String>();
+                        for (Review review : rList) {
+                            if (review.getGameID() == selectedGame.getID()) {
+                                revArray.add(review.getRating() + " Stars: " + review.getDesc());
+                            }
+                        }
+
+                        frame.getGameView().setReviews(revArray);
+
+                        frame.showView("GAME");
+                    }
                 }
             }
+
         });
     }
 }

@@ -59,14 +59,13 @@ public class gameParser {
         return currentGameList;
     }
 
-    public ArrayList<Integer> retrieveReviewList()
+    public ArrayList<Integer> retrieveReviewList(Node xmlGameNode)
     {
         String fieldText;
-        if (reviewList == null) {
-            reviewList = new ArrayList<Integer>();
+            ArrayList<Integer> tempReviewList = new ArrayList<Integer>();
 
             // retrieve the top level node in the tree, items
-            Element items =  xmlDocumentTree.getDocumentElement();
+            Element items = (Element) xmlGameNode;
             NodeList xmlcollectionList = items.getElementsByTagName("review");
 
             for (int collectionNumber = 0; collectionNumber < xmlcollectionList.getLength(); collectionNumber++) {
@@ -74,14 +73,10 @@ public class gameParser {
                 NamedNodeMap attributes = Review.getAttributes();
 
 
-                reviewList.add(Integer.parseInt(attributes.getNamedItem("value").getNodeValue()));
-
-
-                //currentcollectionList.add(parseNextcollection(collection));
+                tempReviewList.add(Integer.parseInt(attributes.getNamedItem("value").getNodeValue()));
             }
-        }
 
-        return reviewList;
+        return tempReviewList;
     }
 
 
@@ -115,7 +110,7 @@ public class gameParser {
 
 
 
-        return new Game(bgg_id,desc, title, minAge, minPlayers, maxPlayers, year, retrieveReviewList());
+        return new Game(bgg_id,desc, title, minAge, minPlayers, maxPlayers, year, retrieveReviewList(xmlGameNode));
     }
 
     /**
@@ -135,7 +130,7 @@ public class gameParser {
                 Node wowzers = attributes.getNamedItem("value");
                 String wowzests = field.getTextContent();
                 Node altCheck = attributes.getNamedItem("type");
-                if (wowzers != null && !(altCheck.getNodeValue().equals("alternate")))
+                if (wowzers != null && (altCheck == null || !altCheck.getNodeValue().equals("alternate")))
                 {
                     fieldText = wowzers.getNodeValue();
                 }
@@ -217,8 +212,8 @@ public class gameParser {
             minAge.setValue(String.valueOf(gamesList.get(x).getMinAge()));
             age.setAttributeNode(minAge);
 
-            Element reviewElement = doc.createElement("reviews");
-            game.appendChild(reviewElement);
+//            Element reviewElement = doc.createElement("reviews");
+//            game.appendChild(reviewElement);
 
 
 
@@ -226,7 +221,7 @@ public class gameParser {
             for(int y=0; y<reviews.size(); y++)
             {
                 Element review = doc.createElement("review");
-                reviewElement.appendChild(review);
+                game.appendChild(review);
                 Attr rid = doc.createAttribute("value");
                 rid.setValue(String.valueOf(reviews.get(y)));
                 review.setAttributeNode(rid);

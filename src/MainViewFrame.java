@@ -31,7 +31,7 @@ public class MainViewFrame extends JFrame {
 
         // Load Data
         try {
-            gParser = new gameParser("src/bgg90Games.xml");
+            gParser = new gameParser("src/gameDatabase.xml");
             allGames = gParser.retrieveGameList();
         } catch (Exception e) {
             allGames = new ArrayList<>();

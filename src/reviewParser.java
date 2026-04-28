@@ -95,12 +95,6 @@ public class reviewParser {
         uID = parseIntegerField(xmlreviewNode, "uID");
         rating = parseIntegerField(xmlreviewNode, "rating");
         desc = parseTextField(xmlreviewNode,"description");
-        //thumburi = parseTextField(xmlreviewNode, "thumbnail");
-        //year = parseIntegerField(xmlreviewNode, "yearpublished");
-        //desc = parseTextField(xmlreviewNode, "description");
-        //minAge = parseIntegerField(xmlreviewNode, "minAge");
-
-
 
 
         return new Review(uID, gID, bgg_id, rating, desc); //Add in array parsing for reviews and collections
@@ -189,7 +183,7 @@ public class reviewParser {
             uIDStr.setValue(String.valueOf(reviewsList.get(x).getUserID()));
             uID.setAttributeNode(uIDStr);
 
-            Element year = doc.createElement("yearpublished");
+            Element year = doc.createElement("description");
             game.appendChild(year);
             Attr yearStr = doc.createAttribute("value");
             yearStr.setValue(String.valueOf(reviewsList.get(x).getDesc()));

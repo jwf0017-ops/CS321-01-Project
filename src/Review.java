@@ -1,5 +1,5 @@
-
-
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class Review implements Comparable<Review> {
 
@@ -30,6 +30,32 @@ public class Review implements Comparable<Review> {
         ID=0;
         rating=5;
 
+    }
+
+    /**
+     * This is the constructor used when creating a new review for the first time
+     * @param inUser ID of the user who owns the review
+     * @param inGame ID of the game the review is for
+     * @param inRating The numerical rating the user gave the game
+     * @param inDescription The textual review the user gave the game
+     */
+    public Review(int inUser, int inGame, int inRating, String inDescription, reviewParser inParse)
+    {
+        userID = inUser;
+        gameID = inGame;
+        rating = inRating;
+        desc = inDescription;
+
+        if (inParse != null)
+        {
+            ArrayList<Review> rList;
+            rList = inParse.retrievereviewsList();
+            ID = rList.size()+1;
+        }
+        else
+        {
+            ID = -1; // WTF we doin here
+        }
     }
 
     public Review(int u, int g, int i, int r, String d)//Constructor to initialize everything on creation

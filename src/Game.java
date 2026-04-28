@@ -26,7 +26,8 @@ public class Game implements Comparable<Game> {
         minPlayers = inMinPlayers;
         maxPlayers = inMaxPlayers;
         yearPublished = inYear;
-        reviewIDs = reviews;
+        reviewIDs = new ArrayList<Integer>();
+        reviewIDs.addAll(reviews);
     }
 
 
@@ -86,7 +87,7 @@ public class Game implements Comparable<Game> {
   private final String gameName; // The game name tied to the game
   private final String gameDesc; // The game description tied to the game
   private final int gameID; // ID of the game
-  private ArrayList<Integer> reviewIDs = new ArrayList<Integer>();
+  private ArrayList<Integer> reviewIDs;
   private final int minAge;
   private final int minPlayers;
   private final int maxPlayers;

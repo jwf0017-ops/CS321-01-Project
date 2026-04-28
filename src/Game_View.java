@@ -1,6 +1,10 @@
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.awt.*;
-
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class Game_View extends JPanel {
@@ -12,6 +16,8 @@ public class Game_View extends JPanel {
 
     private JList<String> reviewList;
     private DefaultListModel<String> reviewModel;
+
+    private int gameID;
 
     private JButton backButton;
 
@@ -51,6 +57,7 @@ public class Game_View extends JPanel {
         backButton = new JButton("Back");
         add(backButton, BorderLayout.SOUTH);
 
+        // Below is the process of making a review. Obviously this shouldn't be in Game_View but it's the night before this is due so I don't much care at the moment. If I had given myself more time to write this, I would refactor a lot of things in this program
         reviewButton.addActionListener(event -> {
             // The below 8 or so lines taken from someone on stackExchange who obviously knows more about GUIs than me (Jake)
             JPanel fields = new JPanel(new GridLayout(2, 1));
@@ -61,16 +68,90 @@ public class Game_View extends JPanel {
             fields.add(comboBox);
 
             int result = JOptionPane.showConfirmDialog(null, fields, "Rating", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-            System.out.println(comboBox.getSelectedItem());
-            System.out.println(field.getText().trim());
+            String reviewText = field.getText().trim();
+            int rating = Integer.parseInt(comboBox.getSelectedItem().toString());
+
+            System.out.println(reviewText);
+
+            reviewParser rParser;
+            userParser uParser;
+            gameParser gParser;
+            ArrayList<Review> rList;
+            ArrayList<Game> gList;
+            ArrayList<User> uList;
+            try {
+                rParser = new reviewParser("src/reviewDatabase.xml");
+                uParser = new userParser("src/userDatabase.xml");
+                gParser = new gameParser("src/gameDatabase.xml");
+                rList = rParser.retrievereviewsList();
+                uList = uParser.retrieveUserList();
+                gList = gParser.retrieveGameList();
+
+            } catch (IOException e) {
+                System.out.println("Failed to open file");
+                rList = new ArrayList<Review>();
+                uList = new ArrayList<User>();
+                gList = new ArrayList<Game>();
+                rParser = null;
+                uParser = null;
+                gParser = null;
+            }
+
+            boolean exists = false;
+            int reviewID = -1;
+            for (Review review : rList)
+            {
+                if (review.getUserID() == frame.getCurrentUser().GetID() && review.getGameID() == gameID)
+                {
+                    System.out.println("Wow I exist!");
+                    exists = true;
+                    review.setDesc(reviewText);
+                    review.setRating(rating);
+                    reviewID = review.getID();
+                }
+            }
+            if (!exists)
+            {
+                Review newReview = new Review(frame.getCurrentUser().GetID(), gameID, rating, reviewText, rParser);
+                rList.add(newReview);
+                reviewID = newReview.getID();
+            }
+
+            for (User user : uList)
+            {
+                if (user.GetID() == frame.getCurrentUser().GetID())
+                {
+                    user.addReview(reviewID);
+                }
+            }
+
+            for (Game game : gList)
+            {
+                if (game.getID() == gameID)
+                {
+                    game.addReview(reviewID);
+                }
+            }
+
+            try {
+                uParser.saveUsersList(uList, "src/userDatabase.xml");
+                gParser.saveGamesList(gList, "src/gameDatabase.xml");
+                rParser.savereviewsList(rList, "src/reviewDatabase.xml");
+
+            } catch (FileNotFoundException | ParserConfigurationException | TransformerException e)
+            {
+                throw new RuntimeException(e);
+            }
+
         });
         backButton.addActionListener(e -> frame.showView("HOME"));
     }
 
     // Set Game info
-    public void setGameInfo(String name, String description) {
+    public void setGameInfo(String name, String description, int inID) {
         nameLabel.setText(name);
         descriptionArea.setText(description);
+        gameID = inID;
         if (description.isEmpty())
         {
             descriptionArea.setText("No description found.");
@@ -79,7 +160,7 @@ public class Game_View extends JPanel {
     }
 
     // Set Reviews
-    public void setReviews(String[] reviews) {
+    public void setReviews(ArrayList<String> reviews) {
 
         reviewModel.clear();
 

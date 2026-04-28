@@ -84,8 +84,11 @@ public class collectionParser {
             Node Review = xmlcollectionList.item(collectionNumber);
             NamedNodeMap attributes = Review.getAttributes();
 
+
             gameList.add(Integer.parseInt(attributes.getNamedItem("value").getNodeValue()));
+
         }
+
 
         return gameList;
     }

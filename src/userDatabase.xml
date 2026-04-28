@@ -7,8 +7,9 @@
     <user id="2">
         <name value="Jake"/>
         <pass value="Forester"/>
-        <collection value="3"/>
-        <collection value="4"/>
-        <collection value="5"/>
+        <review value="1"/>
+        <review value="1"/>
+        <review value="1"/>
+        <review value="1"/>
     </user>
 </users>
