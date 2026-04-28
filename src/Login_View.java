@@ -38,15 +38,21 @@ public class Login_View extends JPanel {
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridBagLayout());
-        centerPanel.setOpaque(false);
+
         JPanel loginBox = new JPanel();
-        loginBox.setOpaque(false);
+
         loginBox.setLayout(new GridBagLayout());
         loginBox.setPreferredSize(new Dimension(300, 200));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        ImageIcon icon = new ImageIcon("src/picture.jpeg");
+        JLabel thumb = new JLabel();
+        thumb.setIcon(icon);
+        add(thumb, BorderLayout.EAST);
+        add(thumb, BorderLayout.WEST);
 
         // Username
         gbc.gridx = 0;
@@ -129,7 +135,7 @@ public class Login_View extends JPanel {
                 int newID = cList.size();
 
                 ArrayList<Integer> newGames = new ArrayList<Integer>();
-                Collection newFavorites = new Collection(newID, "Favorites", newGames);
+                Collection newFavorites = new Collection(newID, "Favorites", newGames, MainViewFrame.filePath);
                 cList.add(newFavorites);
 
                 ArrayList<Integer> newCollections = new ArrayList<Integer>();

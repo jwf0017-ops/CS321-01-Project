@@ -111,7 +111,7 @@ public class collectionParser {
         title = parseTextField(xmlcollectionNode,"name");
 
 
-        return new Collection(collID, title, retrieveGameList(xmlcollectionNode)); //Add in array parsing for reviews and collections
+        return new Collection(collID, title, retrieveGameList(xmlcollectionNode), MainViewFrame.filePath); //Add in array parsing for reviews and collections
     }
 
     /**

@@ -101,7 +101,7 @@ public class Collection_View extends JPanel {
                 collections.put(name, new ArrayList<>());
 
                 ArrayList<Integer> newList = new ArrayList<Integer>();
-                Collection newCollection = new Collection(collections.size(), name, newList);
+                Collection newCollection = new Collection(collections.size(), name, newList, MainViewFrame.filePath);
                 collectionArrayList.add(newCollection);
 
                 try {
