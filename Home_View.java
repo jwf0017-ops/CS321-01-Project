@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,16 +15,16 @@ public class Home_View extends JPanel {
     private JList<String> gameList;
     private DefaultListModel<String> listModel;
 
-    private ArrayList<Game> games; // FULL DATA STORAGE
+    private ArrayList<Game> games;
 
     private Collection_View collectionView;
 
-    public Home_View(MainViewFrame frame) {
+    public Home_View(MainViewFrame frame, Collection_View collectionView) {
         this.frame = frame;
+        this.collectionView = collectionView;
 
         setLayout(new BorderLayout());
 
-        // Top Panel
         JPanel topPanel = new JPanel();
 
         searchButton = new JButton("Search");
@@ -36,18 +37,13 @@ public class Home_View extends JPanel {
 
         add(topPanel, BorderLayout.NORTH);
 
-        // Game List
         listModel = new DefaultListModel<>();
         gameList = new JList<>(listModel);
 
         add(new JScrollPane(gameList), BorderLayout.CENTER);
 
-        // Collection panel
-        collectionView = new Collection_View();
-        collectionView.setPreferredSize(new Dimension(300, 0));
         add(collectionView, BorderLayout.EAST);
 
-        // Buttons
         logoutButton.addActionListener(e -> frame.showView("LOGIN"));
         searchButton.addActionListener(e -> frame.showView("SEARCH"));
 
@@ -57,13 +53,12 @@ public class Home_View extends JPanel {
 
             if (index != -1 && games != null) {
                 Game selectedGame = games.get(index);
-                collectionView.addGameToSelectedCollection(selectedGame.getName());
+                collectionView.addGameToSelectedCollection(selectedGame);
             } else {
                 JOptionPane.showMessageDialog(this, "Select a game first.");
             }
         });
 
-        // Double click game to select
         gameList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
 
@@ -91,8 +86,6 @@ public class Home_View extends JPanel {
         });
     }
 
-
-    // Pass FULL game objects, not just strings
     public void setGames(ArrayList<Game> games) {
 
         this.games = games;
