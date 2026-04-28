@@ -11,14 +11,19 @@ public class Login_View extends JPanel {
     private JButton loginButton;
     private JButton createAccountButton;
     private ArrayList<User> userList;
-    userParser parser;
+    private userParser parser;
+    private ArrayList<Collection> cList;
 
     public Login_View(MainViewFrame frame) {
         try {
             parser = new userParser("src/userDatabase.xml");
             userList = parser.retrieveUserList();
+
+            collectionParser cParser = new collectionParser("src/collectionsDatabase.xml");
+            cList = cParser.retrievecollectionList();
         } catch (Exception e) {
             userList = new ArrayList<>();
+            cList = new ArrayList<Collection>();
             System.out.println("Failed to load users: " + e.getMessage());
         }
 
@@ -84,6 +89,8 @@ public class Login_View extends JPanel {
                     if (user.GetName().equals(username) && user.getPass().equals(password))
                     {
                         frame.showView("HOME");
+                        frame.setCurrentUser(user);
+                        frame.getHomeView().getCollectionView().populateCollections(user, cList);
                         failed = false;
                         break;
                     }

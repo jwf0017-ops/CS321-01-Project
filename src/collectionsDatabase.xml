@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Collections>
-
-</Collections>
+<collections>
+    <collection id="3">
+        <name value="help"/>
+        <games>
+            <game value="366013"/>
+            <game value="332772"/>
+        </games>
+    </collection>
+</collections>

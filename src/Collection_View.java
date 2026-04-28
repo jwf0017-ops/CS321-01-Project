@@ -105,6 +105,18 @@ public class Collection_View extends JPanel {
 
                 try {
                     theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase.xml");
+                    User cUser = frame.getCurrentUser();
+                    userParser uParser = new userParser("src/userDatabase.xml");
+                    ArrayList<User> uList = uParser.retrieveUserList();
+
+                    for (User user : uList)
+                    {
+                        if (user.GetName().equals(cUser.GetName()))
+                        {
+                            user.AddCollection(newCollection.getID());
+                        }
+                    }
+                    uParser.saveUsersList(uList, "src/userDatabase.xml");
                 }
                 catch (IOException | ParserConfigurationException | TransformerException e) {
                     throw new RuntimeException(e);
@@ -219,6 +231,7 @@ public class Collection_View extends JPanel {
                 collectionArrayList.remove(currentCollection);
                 try {
                     theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase");
+                    frame.getCurrentUser().DeleteCollection(currentCollection.getID());
                 }
                 catch (IOException | ParserConfigurationException | TransformerException e) {
                     throw new RuntimeException(e);
@@ -345,15 +358,41 @@ public class Collection_View extends JPanel {
         gameModel.addElement(game.getName());
         currentCollection.addGame(game);
         try {
-            theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase");
+            theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase.xml");
         }
         catch (IOException | ParserConfigurationException | TransformerException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void populateCollections(User inUser)
+    public ArrayList<Collection> populateCollections(User inUser, ArrayList<Collection> collectionList)
     {
+        ArrayList<Collection> newList = new ArrayList<Collection>();
+        for (Collection collection : collectionList)
+        {
+            System.out.println("Collection ID = " + collection.getID() + " and User ID = " + inUser.GetID());
+            if (inUser.getCollactionsList().contains(collection.getID()))
+            {
+                newList.add(collection);
+                collectionModel.addElement(collection.getName());
+                collections.put(collection.getName(), new ArrayList<>());
+
+                ArrayList<String> games = collections.get(collection.getName());
+
+                for (Game game : collection.getGameList())
+                {
+                    games.add(game.getName());
+                    gameModel.addElement(game.getName());
+                    this.collectionList.clearSelection();
+                    gameModel.clear();
+
+                    lastSelectedCollection = null;
+                    lastSelectedGame = null;
+                    currentCollection = null;
+                }
+            }
+        }
+        return newList;
 
     }
 

@@ -14,6 +14,11 @@ public class MainViewFrame extends JFrame {
 
     private User currentUser;
 
+    private userParser uParser;
+    private gameParser gParser;
+    private collectionParser cParser;
+    private reviewParser rParser;
+
     private ArrayList<Game> allGames;
     private ArrayList<Collection> allCollections;
     private ArrayList<User> allUsers;
@@ -26,15 +31,15 @@ public class MainViewFrame extends JFrame {
 
         // Load Data
         try {
-            gameParser parser = new gameParser("src/bgg90Games.xml");
-            allGames = parser.retrieveGameList();
+            gParser = new gameParser("src/bgg90Games.xml");
+            allGames = gParser.retrieveGameList();
         } catch (Exception e) {
             allGames = new ArrayList<>();
             System.out.println("Failed to load games: " + e.getMessage());
         }
 
         try {
-            collectionParser cParser = new collectionParser("src/collectionsDatabase");
+            cParser = new collectionParser("src/collectionsDatabase");
             allCollections = cParser.retrievecollectionList();
         }
         catch (Exception e) {
@@ -42,7 +47,7 @@ public class MainViewFrame extends JFrame {
         }
 
         try {
-            userParser uParser = new userParser("src/userDatabase");
+            uParser = new userParser("src/userDatabase");
             allUsers = uParser.retrieveUserList();
         }
         catch (Exception e) {
@@ -50,7 +55,7 @@ public class MainViewFrame extends JFrame {
         }
 
         try {
-            reviewParser rParser = new reviewParser("src/reviewDatabase");
+            rParser = new reviewParser("src/reviewDatabase");
             allReviews = rParser.retrievereviewsList();
         }
         catch (Exception e) {
@@ -95,6 +100,26 @@ public class MainViewFrame extends JFrame {
 
     public ArrayList<Review> getAllReviews() {
         return allReviews;
+    }
+
+    public User getCurrentUser()
+    {
+        return currentUser;
+    }
+
+    public userParser getUserParser()
+    {
+        return uParser;
+    }
+
+    public collectionParser getCollectionParser()
+    {
+        return cParser;
+    }
+
+    public void setCurrentUser(User newUser)
+    {
+        currentUser = newUser;
     }
 
     public void showView(String name) {

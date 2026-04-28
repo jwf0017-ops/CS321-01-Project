@@ -96,6 +96,10 @@ public class Home_View extends JPanel {
         });
     }
 
+    public Collection_View getCollectionView()
+    {
+        return collectionView;
+    }
 
     // Pass FULL game objects, not just strings
     public void setGames(ArrayList<Game> games) {
@@ -109,12 +113,6 @@ public class Home_View extends JPanel {
             }
         }
 
-    }
-
-    public ArrayList<Game> getGames()
-    {
-        ArrayList<Game> fakeList = (ArrayList<Game>) games.clone();
-        return fakeList;
     }
 
 }

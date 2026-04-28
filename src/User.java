@@ -23,6 +23,7 @@ public class User{
 
         return this.ID;
     }
+
     public int GetCollection(int tarID){
 
         for(int x=0; x<collactionsList.size(); x++)
