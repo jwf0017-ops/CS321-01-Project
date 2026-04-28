@@ -41,12 +41,12 @@ public class Collection_View extends JPanel {
         try {
             theParser = new collectionParser("src/collectionsDatabase.xml");
             freeMeFromThisGameparser = new gameParser("src/bgg90Games.xml");
-
+            collectionArrayList = theParser.retrievecollectionList();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        collectionArrayList = frame.getAllCollections();
+
 
 
         setLayout(new BorderLayout());

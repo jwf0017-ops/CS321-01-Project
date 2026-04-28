@@ -107,16 +107,6 @@ public class MainViewFrame extends JFrame {
         return currentUser;
     }
 
-    public userParser getUserParser()
-    {
-        return uParser;
-    }
-
-    public collectionParser getCollectionParser()
-    {
-        return cParser;
-    }
-
     public void setCurrentUser(User newUser)
     {
         currentUser = newUser;

@@ -8,5 +8,7 @@
         <name value="Jake"/>
         <pass value="Forester"/>
         <collection value="3"/>
+        <collection value="4"/>
+        <collection value="5"/>
     </user>
 </users>
