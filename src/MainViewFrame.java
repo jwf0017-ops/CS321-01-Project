@@ -1,5 +1,8 @@
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainViewFrame extends JFrame {
@@ -24,14 +27,40 @@ public class MainViewFrame extends JFrame {
     private ArrayList<User> allUsers;
     private ArrayList<Review> allReviews;
 
+    public final static String filePath = "src/gameDatabase.xml";
+
     public MainViewFrame() {
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
         // Load Data
+        gameParser theParseler;
         try {
-            gParser = new gameParser("src/gameDatabase.xml");
+            theParseler = new gameParser("src/gameDatabase.xml");
+        } catch (IOException e) {
+            throw (new RuntimeException(e));
+        }
+
+        ArrayList<Game> gameList = new ArrayList<Game>();
+        gameList = theParseler.retrieveGameList();
+
+        firstTimeParser secondTryParser;
+        if (gameList.isEmpty())
+        {
+            try {
+                secondTryParser = new firstTimeParser("src/config.xml");
+                String startFile = secondTryParser.findInputFile();
+                theParseler = new gameParser(startFile);
+                gameList = theParseler.retrieveGameList();
+                theParseler.saveGamesList(gameList, filePath);
+            } catch (IOException | ParserConfigurationException | TransformerException e) {
+                throw (new RuntimeException(e));
+            }
+        }
+
+        try {
+            gParser = new gameParser(filePath);
             allGames = gParser.retrieveGameList();
         } catch (Exception e) {
             allGames = new ArrayList<>();

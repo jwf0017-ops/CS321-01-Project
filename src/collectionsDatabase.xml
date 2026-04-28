@@ -1,24 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <collections>
-    <collection id="3">
-        <name value="five"/>
-        <games>
-            <game value="332772"/>
-        </games>
-    </collection>
-    <collection id="4">
-        <name value="six"/>
-        <games>
-            <game value="233078"/>
-            <game value="327711"/>
-            <game value="295947"/>
-            <game value="350205"/>
-        </games>
-    </collection>
-    <collection id="5">
-        <name value="seven"/>
-        <games>
-            <game value="295947"/>
-        </games>
-    </collection>
+
 </collections>

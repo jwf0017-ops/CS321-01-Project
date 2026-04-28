@@ -40,7 +40,7 @@ public class Collection_View extends JPanel {
 
         try {
             theParser = new collectionParser("src/collectionsDatabase.xml");
-            freeMeFromThisGameparser = new gameParser("src/gameDatabase.xml");
+            freeMeFromThisGameparser = new gameParser(MainViewFrame.filePath);
             collectionArrayList = theParser.retrievecollectionList();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -393,7 +393,6 @@ public class Collection_View extends JPanel {
         ArrayList<Collection> newList = new ArrayList<Collection>();
         for (Collection collection : collectionList)
         {
-            System.out.println("Collection ID = " + collection.getID() + " and User ID = " + inUser.GetID());
             if (inUser.getCollactionsList().contains(collection.getID()))
             {
                 newList.add(collection);

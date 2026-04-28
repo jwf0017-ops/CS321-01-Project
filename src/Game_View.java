@@ -71,8 +71,6 @@ public class Game_View extends JPanel {
             String reviewText = field.getText().trim();
             int rating = Integer.parseInt(comboBox.getSelectedItem().toString());
 
-            System.out.println(reviewText);
-
             reviewParser rParser;
             userParser uParser;
             gameParser gParser;
@@ -82,7 +80,7 @@ public class Game_View extends JPanel {
             try {
                 rParser = new reviewParser("src/reviewDatabase.xml");
                 uParser = new userParser("src/userDatabase.xml");
-                gParser = new gameParser("src/gameDatabase.xml");
+                gParser = new gameParser(MainViewFrame.filePath);
                 rList = rParser.retrievereviewsList();
                 uList = uParser.retrieveUserList();
                 gList = gParser.retrieveGameList();
@@ -103,7 +101,6 @@ public class Game_View extends JPanel {
             {
                 if (review.getUserID() == frame.getCurrentUser().GetID() && review.getGameID() == gameID)
                 {
-                    System.out.println("Wow I exist!");
                     exists = true;
                     review.setDesc(reviewText);
                     review.setRating(rating);
@@ -133,9 +130,10 @@ public class Game_View extends JPanel {
                 }
             }
 
+
             try {
                 uParser.saveUsersList(uList, "src/userDatabase.xml");
-                gParser.saveGamesList(gList, "src/gameDatabase.xml");
+                gParser.saveGamesList(gList, MainViewFrame.filePath);
                 rParser.savereviewsList(rList, "src/reviewDatabase.xml");
 
             } catch (FileNotFoundException | ParserConfigurationException | TransformerException e)
