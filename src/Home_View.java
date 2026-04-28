@@ -48,7 +48,9 @@ public class Home_View extends JPanel {
         add(collectionView, BorderLayout.EAST);
 
         // Buttons
-        logoutButton.addActionListener(e -> frame.showView("LOGIN"));
+        logoutButton.addActionListener(e -> {
+            frame.showView("LOGIN");
+        });
         searchButton.addActionListener(e -> {
             frame.showView("SEARCH");
 
@@ -60,7 +62,7 @@ public class Home_View extends JPanel {
 
             if (index != -1 && games != null) {
                 Game selectedGame = games.get(index);
-                collectionView.addGameToSelectedCollection(selectedGame.getName());
+                collectionView.addGameToSelectedCollection(selectedGame);
             } else {
                 JOptionPane.showMessageDialog(this, "Select a game first.");
             }
@@ -108,4 +110,11 @@ public class Home_View extends JPanel {
         }
 
     }
+
+    public ArrayList<Game> getGames()
+    {
+        ArrayList<Game> fakeList = (ArrayList<Game>) games.clone();
+        return fakeList;
+    }
+
 }

@@ -28,20 +28,21 @@ public class Collection
         gameList.removeIf(game -> (!inList.contains(game.getID())));
     }
 
-    public boolean addGame(int inID)
+    public boolean addGame(Game inGame)
     {
-        boolean exists = gameExists(inID);
+        boolean exists = gameExists(inGame.getID());
         if (!exists)
         {
-            gameIDList.add(inID);
+            gameIDList.add(inGame.getID());
+            gameList.add(inGame);
         }
         return exists;
     }
 
-    public void deleteGame(int inID)
+    public void deleteGame(Game inGame)
     {
-        gameIDList.remove(inID);
-        gameList.removeIf(game -> (game.getID() == inID));
+        gameIDList.remove(inGame.getID());
+        gameList.remove(inGame);
     }
 
     /**
@@ -119,13 +120,16 @@ public class Collection
         return ID;
     }
 
-    public boolean getActive() {
-        return isActive;
+    public void setName(String inName)
+    {
+        name = inName;
     }
 
     public ArrayList<Integer> getIDList() {
         return (ArrayList<Integer>) gameIDList.clone();
     }
+
+    public ArrayList<Game> getGameList() { return gameList; }
 
     private boolean isActive = false;
     private ArrayList<Integer> gameIDList;

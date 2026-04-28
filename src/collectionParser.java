@@ -84,13 +84,8 @@ public class collectionParser {
             Node Review = xmlcollectionList.item(collectionNumber);
             NamedNodeMap attributes = Review.getAttributes();
 
-
             gameList.add(Integer.parseInt(attributes.getNamedItem("value").getNodeValue()));
-
-
-            //currentcollectionList.add(parseNextcollection(collection));
         }
-
 
         return gameList;
     }
@@ -104,26 +99,16 @@ public class collectionParser {
      * @return a collection object containing the parsed attributes
      */
     private Collection parseNextcollection(Node xmlcollectionNode) {
-        Integer bgg_id;
-        //String thumburi ="tbd";
+        Integer collID;
         String title="tbd";
-        //String desc = "filler";
-        //Integer minAge = 0;
-        //Integer year = 0;
-        //Integer minPlayers = 0;
-        //Integer maxPlayers = 0;
+
 
         NamedNodeMap attributes = xmlcollectionNode.getAttributes();  // for this item, get its attributes
-        bgg_id = Integer.parseInt(attributes.getNamedItem("id").getNodeValue());
-
-
+        collID = Integer.parseInt(attributes.getNamedItem("id").getNodeValue());
         title = parseTextField(xmlcollectionNode,"name");
 
 
-
-
-
-        return new Collection(bgg_id, title, retrieveGameList(xmlcollectionNode)); //Add in array parsing for reviews and collections
+        return new Collection(collID, title, retrieveGameList(xmlcollectionNode)); //Add in array parsing for reviews and collections
     }
 
     /**

@@ -1,37 +1,64 @@
+
+
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
 
 public class Collection_View extends JPanel {
+
+    private MainViewFrame frame;
+    private Home_View homeView;
 
     private DefaultListModel<String> collectionModel;
     private JList<String> collectionList;
 
     private DefaultListModel<String> gameModel;
     private JList<String> gameList;
+    Collection currentCollection;
+    ArrayList<Collection> collectionArrayList;
+    collectionParser theParser;
+    gameParser freeMeFromThisGameparser;
 
     private JButton addCollectionButton;
     private JButton renameButton;
     private JButton deleteButton;
-    private JButton removeGameButton;
 
     private HashMap<String, ArrayList<String>> collections;
 
     private final String DEFAULT_COLLECTION = "Favorites";
 
-    public Collection_View() {
-        setLayout(new BorderLayout());
+    // Track selections
+    private String lastSelectedCollection = null;
+    private String lastSelectedGame = null;
 
+    public Collection_View() {
+
+
+        try {
+            theParser = new collectionParser("src/collectionsDatabase.xml");
+            collectionArrayList = theParser.retrievecollectionList();
+            freeMeFromThisGameparser = new gameParser("src/bgg90Games.xml");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        setLayout(new BorderLayout());
         collections = new HashMap<>();
 
-        // Collection list
+        // Collection List
         collectionModel = new DefaultListModel<>();
         collectionList = new JList<>(collectionModel);
+        collectionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Game list
         gameModel = new DefaultListModel<>();
         gameList = new JList<>(gameModel);
+        gameList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JSplitPane splitPane = new JSplitPane(
                 JSplitPane.VERTICAL_SPLIT,
@@ -39,111 +66,265 @@ public class Collection_View extends JPanel {
                 new JScrollPane(gameList)
         );
 
+        splitPane.setDividerLocation(150);
         add(splitPane, BorderLayout.CENTER);
 
-        //  Button panel
-        JPanel buttonPanel = new JPanel();
+        // buttons
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 5, 5));
 
         addCollectionButton = new JButton("Add Collection");
         renameButton = new JButton("Rename");
         deleteButton = new JButton("Delete");
-        removeGameButton = new JButton("Remove Game");
 
         buttonPanel.add(addCollectionButton);
         buttonPanel.add(renameButton);
         buttonPanel.add(deleteButton);
-        buttonPanel.add(removeGameButton);
 
         add(buttonPanel, BorderLayout.NORTH);
 
-        //  create default "favorites list"
+        // Default collection is Favorites
         collectionModel.addElement(DEFAULT_COLLECTION);
         collections.put(DEFAULT_COLLECTION, new ArrayList<>());
 
-        //  Add collection
-        addCollectionButton.addActionListener(e -> {
-            String name = JOptionPane.showInputDialog("Collection name:");
-            if (name == null || name.isEmpty()) {
-                name = "New Collection";
-            }
+        // Add collection button
+        addCollectionButton.addActionListener(event -> {
 
-            // Can't make a collection with the same name
+            String name = JOptionPane.showInputDialog("Collection name:");
+
+            if (name == null || name.trim().isEmpty()) return;
+
             if (!collections.containsKey(name)) {
                 collectionModel.addElement(name);
                 collections.put(name, new ArrayList<>());
-            } else {
+
+                ArrayList<Integer> newList = new ArrayList<Integer>();
+                Collection newCollection = new Collection(collections.size() + 1, name, newList);
+                collectionArrayList.add(newCollection);
+
+                try {
+                    theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase");
+                }
+                catch (IOException | ParserConfigurationException | TransformerException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+            else {
                 JOptionPane.showMessageDialog(this, "Collection already exists.");
             }
         });
 
-        // Rename collection
-        renameButton.addActionListener(e -> {
+        // Rename collection button
+        renameButton.addActionListener(event -> {
+
             String selected = collectionList.getSelectedValue();
             if (selected == null) return;
 
-            //  Prevent renaming Favorites
             if (selected.equals(DEFAULT_COLLECTION)) {
                 JOptionPane.showMessageDialog(this, "Favorites cannot be renamed.");
                 return;
             }
 
             String newName = JOptionPane.showInputDialog("New name:", selected);
-            if (newName != null && !newName.isEmpty()) {
+
+            if (newName != null && !newName.trim().isEmpty()) {
 
                 ArrayList<String> games = collections.remove(selected);
                 collections.put(newName, games);
 
-                collectionModel.setElementAt(newName, collectionList.getSelectedIndex());
+                int index = collectionList.getSelectedIndex();
+                collectionModel.set(index, newName);
+
+                lastSelectedCollection = newName;
+
+                currentCollection.setName(newName);
+                try {
+                    theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase");
+                }
+                catch (IOException | ParserConfigurationException | TransformerException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
-        //  Delete collection
-        deleteButton.addActionListener(e -> {
-            String selected = collectionList.getSelectedValue();
-            if (selected == null) return;
+        // Delete collection/game button
+        deleteButton.addActionListener(event -> {
 
-            //  Prevent deleting Favorites
-            if (selected.equals(DEFAULT_COLLECTION)) {
+            String selectedCollection = collectionList.getSelectedValue();
+            String selectedGame = gameList.getSelectedValue();
+
+            if (selectedCollection == null) {
+                JOptionPane.showMessageDialog(this, "Select a collection or game.");
+                return;
+            }
+
+            // Delete game portion
+            if (selectedGame != null) {
+
+                int choice = JOptionPane.showConfirmDialog(
+                        this,
+                        "Are you sure you want to delete \"" + selectedGame + "\" from the collection \"" + selectedCollection + "\"?",
+                        "Delete Game",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (choice == JOptionPane.YES_OPTION) {
+
+                    collections.get(selectedCollection).remove(selectedGame);
+                    gameModel.removeElement(selectedGame);
+
+                    gameList.clearSelection();
+                    lastSelectedGame = null;
+
+                    ArrayList<Game> fullGameList = freeMeFromThisGameparser.retrieveGameList();
+                    for (Game g : fullGameList)
+                    {
+                        if (g.getName().equals(selectedGame))
+                        {
+                            currentCollection.deleteGame(g);
+                            break;
+                        }
+                    }
+                }
+
+                return;
+            }
+
+            // Delete collection portion
+            if (selectedCollection.equals(DEFAULT_COLLECTION)) {
                 JOptionPane.showMessageDialog(this, "Favorites cannot be deleted.");
                 return;
             }
 
-            collections.remove(selected);
-            collectionModel.removeElement(selected);
-            gameModel.clear();
-        });
+            int choice = JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure you want to delete the collection \"" + selectedCollection + "\"?",
+                    "Delete Collection",
+                    JOptionPane.YES_NO_OPTION
+            );
 
-        // Remove game from collection
-        removeGameButton.addActionListener(e -> {
-            String selectedCollection = collectionList.getSelectedValue();
-            String selectedGame = gameList.getSelectedValue();
+            if (choice == JOptionPane.YES_OPTION) {
 
-            if (selectedCollection == null || selectedGame == null) {
-                JOptionPane.showMessageDialog(this, "Select a game to remove.");
-                return;
-            }
+                collections.remove(selectedCollection);
+                collectionModel.removeElement(selectedCollection);
 
-            collections.get(selectedCollection).remove(selectedGame);
-            gameModel.removeElement(selectedGame);
-        });
-
-        // Show games in selected collection
-        collectionList.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                String selected = collectionList.getSelectedValue();
                 gameModel.clear();
+                collectionList.clearSelection();
 
-                if (selected != null) {
-                    for (String g : collections.get(selected)) {
+                lastSelectedCollection = null;
+                lastSelectedGame = null;
+
+                collectionArrayList.remove(currentCollection);
+                try {
+                    theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase");
+                }
+                catch (IOException | ParserConfigurationException | TransformerException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        // Select/Deselect Collection
+        collectionList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent event) {
+
+                int index = collectionList.locationToIndex(event.getPoint());
+                if (index == -1) return;
+
+                String clicked = collectionModel.getElementAt(index);
+
+                if (clicked.equals(lastSelectedCollection)) {
+
+                    collectionList.clearSelection();
+                    gameModel.clear();
+
+                    lastSelectedCollection = null;
+                    lastSelectedGame = null;
+                    currentCollection = null;
+                }
+                else {
+
+                    collectionList.setSelectedIndex(index);
+                    lastSelectedCollection = clicked;
+
+                    gameModel.clear();
+
+                    for (String g : collections.get(clicked)) {
                         gameModel.addElement(g);
+                    }
+
+                    lastSelectedGame = null;
+                }
+
+
+
+                for (Collection collection : collectionArrayList)
+                {
+                    if (collection.getName().equals(clicked))
+                    {
+                        currentCollection = collection;
+                        break;
+                    }
+                }
+            }
+        });
+
+        // Select/Deselect Game
+        gameList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+                if (e.getClickCount() >= 2) {
+
+                    ArrayList<Game> games = currentCollection.getGameList();
+                    int index = gameList.getSelectedIndex();
+
+                    System.out.println(index);
+
+                    if (index != -1 && games != null) {
+
+
+                        Game selectedGame = games.get(index);
+
+                        frame.getGameView().setGameInfo(
+                                selectedGame.getName(),
+                                selectedGame.getDescription()
+                        );
+
+                        frame.getGameView().setReviews(new String[] {
+                                "No reviews yet"
+                        });
+
+                        frame.showView("GAME");
+                    }
+                }
+
+                else {
+                    int index = gameList.locationToIndex(e.getPoint());
+                    if (index == -1) return;
+
+                    String clickedGame = gameModel.getElementAt(index);
+
+                    if (clickedGame.equals(lastSelectedGame)) {
+
+                        gameList.clearSelection();
+                        lastSelectedGame = null;
+
+                    } else {
+
+                        gameList.setSelectedIndex(index);
+                        lastSelectedGame = clickedGame;
+
                     }
                 }
             }
         });
     }
 
-    // Add game to selected collection
-    public void addGameToSelectedCollection(String game) {
+    // Adding game to collection logic
+    public void addGameToSelectedCollection(Game game) {
+
         String selected = collectionList.getSelectedValue();
 
         if (selected == null) {
@@ -151,7 +332,28 @@ public class Collection_View extends JPanel {
             return;
         }
 
-        collections.get(selected).add(game);
-        gameModel.addElement(game);
+        ArrayList<String> games = collections.get(selected);
+
+        if (games.contains(game.getName())) {
+            JOptionPane.showMessageDialog(this, "Game already in collection.");
+            return;
+        }
+
+        games.add(game.getName());
+        gameModel.addElement(game.getName());
+        currentCollection.addGame(game);
+        try {
+            theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase");
+        }
+        catch (IOException | ParserConfigurationException | TransformerException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    public void populateCollections(User inUser)
+    {
+
+    }
+
+
 }
