@@ -5,6 +5,27 @@
         <games>
             <game value="316554"/>
             <game value="199792"/>
+            <game value="366013"/>
+        </games>
+    </collection>
+    <collection id="1">
+        <name value="Favorites"/>
+        <games/>
+    </collection>
+    <collection id="2">
+        <name value="Bob"/>
+        <games>
+            <game value="174430"/>
+            <game value="177736"/>
+            <game value="350205"/>
+        </games>
+    </collection>
+    <collection id="3">
+        <name value="Gilley"/>
+        <games>
+            <game value="277659"/>
+            <game value="7336"/>
+            <game value="179275"/>
         </games>
     </collection>
 </collections>

@@ -51,6 +51,8 @@ public class Home_View extends JPanel {
         // Buttons
         logoutButton.addActionListener(e -> {
             frame.showView("LOGIN");
+            MainView.main();
+            frame.dispose();
         });
         searchButton.addActionListener(e -> {
             frame.showView("SEARCH");

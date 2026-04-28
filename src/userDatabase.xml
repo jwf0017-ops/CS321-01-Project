@@ -6,4 +6,11 @@
         <review value="1"/>
         <collection value="0"/>
     </user>
+    <user id="1">
+        <name value="Bob"/>
+        <pass value="Gilley"/>
+        <collection value="1"/>
+        <collection value="2"/>
+        <collection value="3"/>
+    </user>
 </users>

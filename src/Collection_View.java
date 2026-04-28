@@ -392,5 +392,12 @@ public class Collection_View extends JPanel {
 
     }
 
-
+public void helpLogOut()
+{
+    gameModel.clear();
+    this.collectionList.clearSelection();
+    lastSelectedCollection = null;
+    lastSelectedGame = null;
+    currentCollection = null;
+}
 }
