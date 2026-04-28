@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <collections>
-
+    <collection id="0">
+        <name value="Favorites"/>
+        <games>
+            <game value="316554"/>
+            <game value="199792"/>
+        </games>
+    </collection>
 </collections>

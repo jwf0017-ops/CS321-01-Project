@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <reviews>
-
+    <review id="1">
+        <gID value="327711"/>
+        <uID value="0"/>
+        <description value="SUCKS BAD"/>
+        <rating value="1"/>
+    </review>
 </reviews>

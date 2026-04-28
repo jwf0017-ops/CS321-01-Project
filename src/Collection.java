@@ -41,7 +41,7 @@ public class Collection
 
     public void deleteGame(Game inGame)
     {
-        gameIDList.remove(inGame.getID());
+        gameIDList.remove((Integer) inGame.getID());
         gameList.remove(inGame);
     }
 

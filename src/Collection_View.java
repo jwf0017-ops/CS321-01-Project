@@ -18,10 +18,11 @@ public class Collection_View extends JPanel {
 
     private DefaultListModel<String> gameModel;
     private JList<String> gameList;
-    Collection currentCollection;
-    ArrayList<Collection> collectionArrayList;
-    collectionParser theParser;
-    gameParser freeMeFromThisGameparser;
+    private Collection currentCollection;
+    private ArrayList<Collection> collectionArrayList;
+    private collectionParser theParser;
+    private gameParser freeMeFromThisGameparser;
+    private userParser uParser;
 
     private JButton addCollectionButton;
     private JButton renameButton;
@@ -84,9 +85,9 @@ public class Collection_View extends JPanel {
 
         add(buttonPanel, BorderLayout.NORTH);
 
-        // Default collection is Favorites
-        collectionModel.addElement(DEFAULT_COLLECTION);
-        collections.put(DEFAULT_COLLECTION, new ArrayList<>());
+//        // Default collection is Favorites
+//        collectionModel.addElement(DEFAULT_COLLECTION);
+//        collections.put(DEFAULT_COLLECTION, new ArrayList<>());
 
         // Add collection button
         addCollectionButton.addActionListener(event -> {
@@ -100,13 +101,13 @@ public class Collection_View extends JPanel {
                 collections.put(name, new ArrayList<>());
 
                 ArrayList<Integer> newList = new ArrayList<Integer>();
-                Collection newCollection = new Collection(collections.size() + 1, name, newList);
+                Collection newCollection = new Collection(collections.size(), name, newList);
                 collectionArrayList.add(newCollection);
 
                 try {
                     theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase.xml");
                     User cUser = frame.getCurrentUser();
-                    userParser uParser = new userParser("src/userDatabase.xml");
+                    uParser = new userParser("src/userDatabase.xml");
                     ArrayList<User> uList = uParser.retrieveUserList();
 
                     for (User user : uList)
@@ -196,6 +197,11 @@ public class Collection_View extends JPanel {
                         if (g.getName().equals(selectedGame))
                         {
                             currentCollection.deleteGame(g);
+                            try {
+                                theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase.xml");
+                            } catch (IOException | ParserConfigurationException | TransformerException e) {
+                                throw (new RuntimeException(e));
+                            }
                             break;
                         }
                     }
@@ -230,8 +236,17 @@ public class Collection_View extends JPanel {
 
                 collectionArrayList.remove(currentCollection);
                 try {
-                    theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase");
+                    theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase.xml");
                     frame.getCurrentUser().DeleteCollection(currentCollection.getID());
+                    ArrayList<User> uList = uParser.retrieveUserList();
+                    for (User u : uList)
+                    {
+                        if (u.equals(frame.getCurrentUser()))
+                        {
+                            u.DeleteCollection(currentCollection.getID());
+                        }
+                    }
+
                 }
                 catch (IOException | ParserConfigurationException | TransformerException e) {
                     throw new RuntimeException(e);
@@ -290,73 +305,32 @@ public class Collection_View extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
 
-                if (e.getClickCount() >= 2) {
+                int index = gameList.locationToIndex(e.getPoint());
+                if (index == -1) return;
 
-                    ArrayList<Game> games = currentCollection.getGameList();
+                String clickedGame = gameModel.getElementAt(index);
 
-                    int index = gameList.getSelectedIndex();
+                if (clickedGame.equals(lastSelectedGame)) {
 
-                    if (index != -1 && games != null) {
+                    gameList.clearSelection();
+                    lastSelectedGame = null;
+                    currentCollection = null;
 
-                        Game selectedGame = games.get(index);
-
-                        frame.getGameView().setGameInfo(
-                                selectedGame.getName(),
-                                selectedGame.getDescription(),
-                                selectedGame.getID()
-                        );
-
-                        if (selectedGame.getReviewIDs().isEmpty())
-                        {
-                            ArrayList<String> newList = new ArrayList<String>();
-                            newList.add("No reviews yet");
-                            frame.getGameView().setReviews(newList);
-                        }
-                        else
-                        {
-                            reviewParser rParse;
-                            ArrayList<Review> rList;
-                            try {
-                                rParse = new reviewParser("src/reviewDatabase.xml");
-                                rList = rParse.retrievereviewsList();
-                            } catch (IOException error) {
-                                throw (new RuntimeException(error));
-                            }
-                            ArrayList<String> revArray = new ArrayList<String>();
-                            for (Review review : rList)
-                            {
-                                if (review.getGameID() == selectedGame.getID())
-                                {
-                                    revArray.add(review.getRating() + " Stars: " + review.getDesc());
-                                }
-                            }
-
-                            frame.getGameView().setReviews(revArray);
-                        }
-
-                        frame.showView("GAME");
-                    }
                 }
-
                 else {
-                    int index = gameList.locationToIndex(e.getPoint());
-                    if (index == -1) return;
-
-                    String clickedGame = gameModel.getElementAt(index);
-
-                    if (clickedGame.equals(lastSelectedGame)) {
-
-                        gameList.clearSelection();
-                        lastSelectedGame = null;
-
-                    } else {
-
-                        gameList.setSelectedIndex(index);
-                        lastSelectedGame = clickedGame;
-
+                    gameList.setSelectedIndex(index);
+                    lastSelectedGame = clickedGame;
+                    for (Collection collection : collectionArrayList)
+                    {
+                        if (collection.getName().equals(clickedGame))
+                        {
+                            currentCollection = collection;
+                            break;
+                        }
                     }
                 }
             }
+
         });
     }
 

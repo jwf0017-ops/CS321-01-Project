@@ -7,6 +7,7 @@ public class Login_View extends JPanel {
     private MainViewFrame frame;
 
     private JTextField usernameField;
+    private Image backgroundImage;
     private JPasswordField passwordField;
     private JButton loginButton;
     private JButton createAccountButton;
@@ -15,28 +16,31 @@ public class Login_View extends JPanel {
     private ArrayList<Collection> cList;
 
     public Login_View(MainViewFrame frame) {
+        collectionParser cParser;
         try {
             parser = new userParser("src/userDatabase.xml");
             userList = parser.retrieveUserList();
 
-            collectionParser cParser = new collectionParser("src/collectionsDatabase.xml");
+            cParser = new collectionParser("src/collectionsDatabase.xml");
             cList = cParser.retrievecollectionList();
         } catch (Exception e) {
             userList = new ArrayList<>();
             cList = new ArrayList<Collection>();
             System.out.println("Failed to load users: " + e.getMessage());
+            cParser = null;
         }
 
         this.frame = frame;
-
+        backgroundImage = new ImageIcon("src/background.jpg").getImage();
         //userList = frame.getAllUsers();
 
         setLayout(new BorderLayout());
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridBagLayout());
-
+        centerPanel.setOpaque(false);
         JPanel loginBox = new JPanel();
+        loginBox.setOpaque(false);
         loginBox.setLayout(new GridBagLayout());
         loginBox.setPreferredSize(new Dimension(300, 200));
 
@@ -67,10 +71,12 @@ public class Login_View extends JPanel {
         gbc.gridy = 2;
         gbc.gridwidth = 2;
         loginButton = new JButton("Login");
+        loginButton.setPreferredSize(new Dimension(120, 30));
         loginBox.add(loginButton, gbc);
 
         gbc.gridy = 3;
         createAccountButton = new JButton("Create Account");
+        createAccountButton.setPreferredSize(new Dimension(150, 30));
         loginBox.add(createAccountButton, gbc);
 
         centerPanel.add(loginBox);
@@ -106,6 +112,7 @@ public class Login_View extends JPanel {
         });
 
         // Create account
+        collectionParser finalCParser = cParser;
         createAccountButton.addActionListener(event -> {
             String username = getUsername();
             String password = getPassword();
@@ -119,18 +126,30 @@ public class Login_View extends JPanel {
                     }
                 }
 
+                int newID = cList.size();
+
+                ArrayList<Integer> newGames = new ArrayList<Integer>();
+                Collection newFavorites = new Collection(newID, "Favorites", newGames);
+                cList.add(newFavorites);
+
                 ArrayList<Integer> newCollections = new ArrayList<Integer>();
+                newCollections.add(newID);
                 ArrayList<Integer> newReviews = new ArrayList<Integer>();
-                User newbie = new User(username, password, userList.size()+1, newCollections, newReviews);
+                User newbie = new User(username, password, userList.size(), newCollections, newReviews);
                 userList.add(newbie);
+
+
 
                 try {
                     parser.saveUsersList(userList, "src/userDatabase.xml");
+                    finalCParser.saveCollectionsList(cList, "src/collectionsDatabase.xml");
                 } catch (Exception e) {
                     System.out.println("Failed to save games: " + e.getMessage());
                 }
 
                 JOptionPane.showMessageDialog(this, "Please log in with your new account");
+                MainView.main();
+                frame.dispose();
             }
 
         });
@@ -154,6 +173,12 @@ public class Login_View extends JPanel {
 
     public JButton getCreateAccountButton() {
         return createAccountButton;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
 
 

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <users>
-    <user id="1">
-        <name value=""/>
-        <pass value=""/>
-    </user>
-    <user id="2">
+    <user id="0">
         <name value="Jake"/>
         <pass value="Forester"/>
+        <review value="1"/>
+        <collection value="0"/>
     </user>
 </users>
