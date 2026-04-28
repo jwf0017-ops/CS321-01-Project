@@ -43,7 +43,7 @@ public class Home_View extends JPanel {
         add(new JScrollPane(gameList), BorderLayout.CENTER);
 
         // Collection panel
-        collectionView = new Collection_View();
+        collectionView = new Collection_View(frame);
         collectionView.setPreferredSize(new Dimension(300, 0));
         add(collectionView, BorderLayout.EAST);
 

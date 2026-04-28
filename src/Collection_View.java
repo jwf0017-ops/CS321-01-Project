@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class Collection_View extends JPanel {
 
     private MainViewFrame frame;
-    private Home_View homeView;
 
     private DefaultListModel<String> collectionModel;
     private JList<String> collectionList;
@@ -36,16 +35,19 @@ public class Collection_View extends JPanel {
     private String lastSelectedCollection = null;
     private String lastSelectedGame = null;
 
-    public Collection_View() {
+    public Collection_View(MainViewFrame frame) {
 
 
         try {
             theParser = new collectionParser("src/collectionsDatabase.xml");
-            collectionArrayList = theParser.retrievecollectionList();
             freeMeFromThisGameparser = new gameParser("src/bgg90Games.xml");
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        collectionArrayList = frame.getAllCollections();
+
 
         setLayout(new BorderLayout());
         collections = new HashMap<>();
@@ -102,7 +104,7 @@ public class Collection_View extends JPanel {
                 collectionArrayList.add(newCollection);
 
                 try {
-                    theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase");
+                    theParser.saveCollectionsList(collectionArrayList, "src/collectionsDatabase.xml");
                 }
                 catch (IOException | ParserConfigurationException | TransformerException e) {
                     throw new RuntimeException(e);

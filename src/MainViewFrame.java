@@ -28,19 +28,34 @@ public class MainViewFrame extends JFrame {
         try {
             gameParser parser = new gameParser("src/bgg90Games.xml");
             allGames = parser.retrieveGameList();
-            collectionParser cParser = new collectionParser("src/collectionsDatabase");
-            allCollections = cParser.retrievecollectionList();
-
-            userParser uParser = new userParser("src/userDatabase");
-            allUsers = uParser.retrieveUserList();
-
-            reviewParser rParser = new reviewParser("src/reviewDatabase");
-            allReviews = rParser.retrievereviewsList();
         } catch (Exception e) {
             allGames = new ArrayList<>();
             System.out.println("Failed to load games: " + e.getMessage());
         }
 
+        try {
+            collectionParser cParser = new collectionParser("src/collectionsDatabase");
+            allCollections = cParser.retrievecollectionList();
+        }
+        catch (Exception e) {
+            allCollections = new ArrayList<Collection>();
+        }
+
+        try {
+            userParser uParser = new userParser("src/userDatabase");
+            allUsers = uParser.retrieveUserList();
+        }
+        catch (Exception e) {
+            allUsers = new ArrayList<User>();
+        }
+
+        try {
+            reviewParser rParser = new reviewParser("src/reviewDatabase");
+            allReviews = rParser.retrievereviewsList();
+        }
+        catch (Exception e) {
+            allReviews = new ArrayList<Review>();
+        }
         // Create Views
         loginView = new Login_View(this);
         homeView = new Home_View(this);

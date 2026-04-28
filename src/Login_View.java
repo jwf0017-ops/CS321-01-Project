@@ -16,6 +16,7 @@ public class Login_View extends JPanel {
     public Login_View(MainViewFrame frame) {
         try {
             parser = new userParser("src/userDatabase.xml");
+            userList = parser.retrieveUserList();
         } catch (Exception e) {
             userList = new ArrayList<>();
             System.out.println("Failed to load users: " + e.getMessage());
@@ -23,7 +24,7 @@ public class Login_View extends JPanel {
 
         this.frame = frame;
 
-        userList = frame.getAllUsers();
+        //userList = frame.getAllUsers();
 
         setLayout(new BorderLayout());
 

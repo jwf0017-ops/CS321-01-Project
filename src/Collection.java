@@ -131,7 +131,6 @@ public class Collection
 
     public ArrayList<Game> getGameList() { return gameList; }
 
-    private boolean isActive = false;
     private ArrayList<Integer> gameIDList;
     private ArrayList<Game> gameList;
     private String name;
