@@ -21,7 +21,7 @@ public class MainViewFrame extends JFrame {
 
         // Load Data
         try {
-            gameParser parser = new gameParser("testxml.xml");
+            gameParser parser = new gameParser("C:/Users/mdcle/Downloads/bgg90Games.xml");
             allGames = parser.retrieveGameList();
         } catch (Exception e) {
             allGames = new ArrayList<>();
@@ -43,13 +43,12 @@ public class MainViewFrame extends JFrame {
         add(mainPanel);
 
         setTitle("Game App");
-        setSize(1500, 900);
+        setSize(1500, 890);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Should push games to Home and Search Views
+        // Push games to Home View
         homeView.setGames(allGames);
-        searchView.setGames(allGames); // if you add this method
 
         showView("LOGIN");
     }
